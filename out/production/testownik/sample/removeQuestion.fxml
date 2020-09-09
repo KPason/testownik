@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"  fx:controller="sample.RemoveQuestionController"
+           >
+
+    <content>
+        <GridPane vgap="10" hgap="10">
+            <TextField fx:id="removeQuestionTextField"                  GridPane.RowIndex="0" GridPane.columnIndex="0"/>
+            <Label text="type the question you want to remove here"     GridPane.RowIndex="1" GridPane.columnIndex="0"/>
+        </GridPane>
+    </content>
+
+
+</DialogPane>
