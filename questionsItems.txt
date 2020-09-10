@@ -1,6 +1,4 @@
-10*5	5	25	13	50	50
-Which one is an animal?	Bird	Cheese	Stick	Butter	Bird
 1+1	2	3	4	5	2
-How many kg weights 1 l of water	1	0,997	2	0.5	0,997
-sthg new 1	1	2	3	4	1
-sun's color	blue	yellow	green	black	yellow
+2+2	4	25	13	50	4
+3+3	6	Cheese	Stick	Butter	6
+4+4	8	0,997	2	0.5	8

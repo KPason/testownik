@@ -9,14 +9,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class QuestionsDataBase {
     private static QuestionsDataBase instance = new QuestionsDataBase();
     private final String fileName = "questionsItems.txt";
     private Path path = Paths.get(fileName);
-    private ObservableList<Question> questionsList;
-    private ObservableList<Question> correctQuestionsList;
-    private ObservableList<Question> wrongQuestionsList;
+    private ArrayList<Question> questionsList;
+    private ArrayList<Question> correctQuestionsList; // wystarczy chyba tylko counter zwykły ogarnąć
+    private ArrayList<Question> wrongQuestionsList;
 
     private QuestionsDataBase() {
     }
@@ -25,20 +27,21 @@ public class QuestionsDataBase {
         return instance;
     }
 
-    public ObservableList<Question> getQuestionsList() {
+    public ArrayList<Question> getQuestionsList() {
         return questionsList;
     }
 
-    public ObservableList<Question> getCorrectQuestionsList() {
+    public ArrayList<Question> getCorrectQuestionsList() {
         return correctQuestionsList;
     }
 
-    public ObservableList<Question> getWrongQuestionsList() {
+    public ArrayList<Question> getWrongQuestionsList() {
         return wrongQuestionsList;
     }
 
     public void loadQuestions() throws IOException {
-        questionsList = FXCollections.observableArrayList();
+        questionsList = new ArrayList<>();
+        wrongQuestionsList = new ArrayList<>();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String input;
             while ((input = br.readLine()) != null) {
@@ -76,6 +79,15 @@ public class QuestionsDataBase {
     public void addQuestion(Question question) {
         questionsList.add(question);
     }
+
+    public void addWrongQuestion(Question question){
+        wrongQuestionsList.add(question);
+    }
+
+    public Question getWrongQuestion(int questionNumber){
+        return wrongQuestionsList.get(questionNumber);
+    }
+
 }
 
 
