@@ -1,0 +1,106 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane fx:id="mainWindowBorderPane" fx:controller="sample.mainController"
+            xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: white">
+    <top>
+        <MenuBar>
+            <Menu fx:id="mainMenu" text="Game">
+                <items>
+                    <MenuItem fx:id="menuStartButton" text="Start" onAction="#startTheGame"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem fx:id="menuRestartButton" text="Restart" onAction="#restartTheGame"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Exit"/>
+                </items>
+            </Menu>
+
+            <Menu text="Questions">
+                <MenuItem text="Edit questions" onAction="#showEditingQuestionsDialog"/>
+            </Menu>
+        </MenuBar>
+
+        <!--                <HBox alignment="CENTER" style="-fx-border-color: black; -fx-border-width: 2;">-->
+        <!--                    <Label text="This is a test game you can play to become a true java programmer" textFill="#663399">-->
+        <!--                        <font>-->
+        <!--                            <Font name="Verdana" size="15"/>-->
+        <!--                        </font>-->
+        <!--                    </Label>-->
+        <!--                </HBox>-->
+    </top>
+
+    <center>
+        <VBox spacing="40">
+            <padding>
+                <Insets top="80"/>
+            </padding>
+            <VBox alignment="TOP_CENTER" spacing=" 15">
+
+                <padding>
+                    <Insets top="10" bottom="10"/>
+                </padding>
+
+                <Label fx:id="questionLabel" alignment="CENTER" textAlignment="CENTER" wrapText="true"
+                       textFill="#663399" prefWidth="400">
+                    <font>
+                        <Font name="Verdana" size="20"/>
+                    </font>
+                </Label>
+
+                <fx:define>
+                    <ToggleGroup fx:id="questionsToggleGroup"/>
+                </fx:define>
+
+            </VBox>
+
+
+            <VBox spacing="10">
+
+                <fx:define>
+                    <ToggleGroup fx:id="answerToggleGroup"/>
+                </fx:define>
+                <padding>
+                    <Insets left="100"/>
+                </padding>
+
+                <RadioButton fx:id="firstQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
+                <RadioButton fx:id="secondQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
+                <RadioButton fx:id="thirdQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
+                <RadioButton fx:id="fourthQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
+            </VBox>
+
+            <VBox alignment="BOTTOM_RIGHT">
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="checkingButton" prefWidth="100" text="check answer"
+                            onMouseClicked="#checkingTheAnswer"/>
+                    <Button fx:id="nextQuestionButton" prefWidth="100" text="go to next"
+                            onMouseClicked="#goToTheNextQuestion"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox alignment="CENTER">
+            <Label fx:id="resultLabel" textFill="#663399">
+                <padding>
+                    <Insets bottom="70"/>
+                </padding>
+                <font>
+                    <Font name="Verdana" size="30"/>
+                </font>
+            </Label>
+        </VBox>
+    </bottom>
+
+    <left>
+    </left>
+
+    <right>
+    </right>
+
+
+</BorderPane>
