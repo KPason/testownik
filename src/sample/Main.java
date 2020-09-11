@@ -31,7 +31,7 @@ public class Main extends Application {
             QuestionsDataBase.getInstance().loadQuestions();
 
         }catch (IOException e){
-            System.out.println(e.getMessage());
+            System.out.println("Couldn't load the questions");
         }
     }
 

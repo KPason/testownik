@@ -25,22 +25,23 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.CustomMenuItem?>
 <BorderPane fx:id="mainWindowBorderPane" fx:controller="sample.Controller"
             xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: white">
 
 
     <top>
         <MenuBar>
-            <Menu text="File">
-                <MenuItem text="Add new question" onAction="#showAddingNewQuestionDialog"/>
+            <Menu fx:id="mainMenu" text="Game">
+                <MenuItem fx:id="menuStartButton" text="Start" onAction="#startTheGame"/>
                 <SeparatorMenuItem/>
-                <MenuItem text="Remove question" onAction="#showRemovingQuestionDialog"/>
+                <MenuItem fx:id="menuRestartButton" text="Restart" onAction="#restartTheGame"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit"/>
             </Menu>
 
-            <Menu text="sthg else">
-                <MenuItem />
+            <Menu text="Questions">
             </Menu>
         </MenuBar>
 
@@ -54,11 +55,11 @@
     </top>
 
     <center>
-        <VBox  spacing="40">
+        <VBox spacing="40">
             <padding>
                 <Insets top="80"/>
             </padding>
-            <VBox alignment="TOP_CENTER"  spacing=" 15">
+            <VBox alignment="TOP_CENTER" spacing=" 15">
 
                 <padding>
                     <Insets top="10" bottom="10"/>
@@ -78,7 +79,7 @@
             </VBox>
 
 
-            <VBox  spacing="10">
+            <VBox spacing="10">
 
                 <fx:define>
                     <ToggleGroup fx:id="answerToggleGroup"/>
@@ -105,68 +106,22 @@
     </center>
 
     <bottom>
-        <VBox alignment="CENTER" style="-fx-border-color: black; -fx-border-width: 2;">
-            <Label fx:id="resultLabel" textFill="#663399">
+        <VBox alignment="CENTER" >
+            <Label fx:id="resultLabel" textFill="#663399" >
+                <padding>
+                    <Insets bottom="70"/>
+                </padding>
                 <font>
-                    <Font name="Verdana" size="20"/>
+                    <Font name="Verdana" size="30"/>
                 </font>
             </Label>
         </VBox>
     </bottom>
 
     <left>
-        <VBox alignment="CENTER" style="-fx-border-color: black; -fx-border-width: 2;" prefWidth="100" spacing="100">
-            <VBox spacing="5">
-                <Label wrapText="true" text="Check the correct and wrong answers you chose" textAlignment="CENTER"
-                       textFill="#663399">
-                    <font>
-                        <Font name="Verdana" size="10"/>
-                    </font>
-                </Label>
-
-                <Accordion>
-                    <panes>
-                        <TitledPane text="wrong answers">
-                            <Button text="go" maxWidth="Infinity"/>
-                        </TitledPane>
-                        <TitledPane text="good answers">
-                            <Button text="go" maxWidth="Infinity"/>
-                        </TitledPane>
-                    </panes>
-                </Accordion>
-
-            </VBox>
-            <VBox spacing="5">
-                <Label textAlignment="CENTER" text="Notes to the question" wrapText="true" textFill="#663399">
-
-                    <font>
-                        <Font name="Verdana" size="10"/>
-                    </font>
-                </Label>
-
-                <TextField maxHeight="300"/>
-            </VBox>
-        </VBox>
     </left>
 
     <right>
-        <VBox alignment="CENTER" style="-fx-border-color: black; -fx-border-width: 2;" prefWidth="100" spacing="5">
-            <Label text="Rate how hard was the question" textAlignment="CENTER" textFill="#663399" wrapText="true">
-                <font>
-                    <Font name="Verdana" size="10"/>
-                </font>
-            </Label>
-            <ComboBox promptText="level">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Hard"/>
-                        <String fx:value="Medium"/>
-                        <String fx:value="Easy"/>
-                    </FXCollections>
-                </items>
-            </ComboBox>
-
-        </VBox>
     </right>
 
 

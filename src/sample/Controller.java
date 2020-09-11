@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
@@ -38,6 +39,11 @@ public class Controller {
     private ToggleGroup answerToggleGroup;
     @FXML
     private BorderPane mainWindowBorderPane;
+    @FXML
+    private MenuItem menuStartButton;
+    @FXML
+    private MenuItem menuRestartButton;
+
 
 
     private int questionsCounter = 0;
@@ -51,9 +57,46 @@ public class Controller {
 
 
     public void initialize() {
-        nextQuestionButton.setDisable(true);
+        disablingAndDismissingTheButtons("WELCOME TO THE GAME",true, true);
+        menuRestartButton.setDisable(true);
+    }
+
+    @FXML
+    public void startTheGame(){
+        disablingAndDismissingTheButtons(false,false);
         loadNextQuestion();
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
+        nextQuestionButton.setDisable(true);
+        menuRestartButton.setDisable(false);
+        menuStartButton.setDisable(true);
+
+    }
+
+    @FXML
+    public void restartTheGame(){
+        try{
+        QuestionsDataBase.getInstance().saveQuestions();
+        }catch (IOException e){
+            System.out.println("Couldn't save the questions when restarted the game");
+        }
+        try{
+            QuestionsDataBase.getInstance().loadQuestions();
+
+        }catch (IOException e){
+            System.out.println("Couldn't load the questions when restarted the game");
+        }
+        //resetting all main variables
+        questionsCounter=0;
+        QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
+        savedWrongQuestions.clear();
+        actualWrongQuestion=null;
+        wrongQuestionIndex=0;
+        isQuestionAnswered = false;
+        //*********************WILL NEED TO ADD CORRECT ANSWERS COUNTER WHEN IMPLEMENTED PROBABLY ************************
+        disablingAndDismissingTheButtons(false,false);
+        loadNextQuestion();
+        correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
+        nextQuestionButton.setDisable(true);
 
     }
 
@@ -130,6 +173,7 @@ public class Controller {
 
     public void settingSceneAfterTheAnswer(String textColour, String labelText) {
         resultLabel.setText(labelText);
+        resultLabel.setTextFill(Paint.valueOf(textColour));
         checkingButton.setTextFill(Paint.valueOf(textColour));
         questionsCounter++;
 
@@ -152,6 +196,7 @@ public class Controller {
 
     public void loadNextQuestion() {
 
+        answerToggleGroup.selectToggle(null);
         // loading NEXT question if there is any
         if (questionsCounter < QuestionsDataBase.getInstance().getQuestionsList().size()) {
             firstQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getFirstAnswer());
@@ -197,7 +242,7 @@ public class Controller {
 
         } else {
             // disabling buttons after all questions
-            disablingAndDismissingTheButtons("");
+            disablingAndDismissingTheButtons("",true,true);
         }
     }
 
@@ -235,26 +280,30 @@ public class Controller {
 
 
 
-     public void disablingTheButtons(){
-        firstQuestionButton.setDisable(true);
-        secondQuestionButton.setDisable(true);
-        thirdQuestionButton.setDisable(true);
-        fourthQuestionButton.setDisable(true);
+     public void disablingTheButtons(boolean disableButtons){
+        firstQuestionButton.setDisable(disableButtons);
+        secondQuestionButton.setDisable(disableButtons);
+        thirdQuestionButton.setDisable(disableButtons);
+        fourthQuestionButton.setDisable(disableButtons);
+
     }
-    public void disablingTheButtonsWithQuestionAreaText(String questionAreaText){
-        questionLabel.setText(questionAreaText);
-        disablingTheButtons();
+    public void dismissButtons(boolean dismissButtons){
+        firstQuestionButton.setVisible(!dismissButtons);
+        secondQuestionButton.setVisible(!dismissButtons);
+        thirdQuestionButton.setVisible(!dismissButtons);
+        fourthQuestionButton.setVisible(!dismissButtons);
+        nextQuestionButton.setVisible(!dismissButtons);
+        checkingButton.setVisible(!dismissButtons);
     }
 
-    public void disablingAndDismissingTheButtons(String questionAreaText){
+    public void disablingAndDismissingTheButtons(String questionAreaText,boolean disableButtons, boolean dismissButtons){
         questionLabel.setText(questionAreaText);
-        disablingTheButtons();
-        firstQuestionButton.setVisible(false);
-        secondQuestionButton.setVisible(false);
-        thirdQuestionButton.setVisible(false);
-        fourthQuestionButton.setVisible(false);
-        nextQuestionButton.setVisible(false);
-        checkingButton.setVisible(false);
+        disablingTheButtons(disableButtons);
+        dismissButtons(dismissButtons);
+    }
+    public void disablingAndDismissingTheButtons(boolean disableButtons, boolean dismissButtons){
+        disablingTheButtons(disableButtons);
+        dismissButtons(dismissButtons);
     }
 
 }
