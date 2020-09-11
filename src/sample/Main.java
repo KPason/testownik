@@ -11,13 +11,18 @@ import java.io.IOException;
 
 public class Main extends Application {
 
+    private Stage window;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("mainwindow.fxml"));
-        primaryStage.setTitle("Test game");
-        primaryStage.setScene(new Scene(root, 800, 500));
-        primaryStage.show();
-        primaryStage.setResizable(false);
+
+        window = primaryStage;
+        Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
+        window.setScene(new Scene(mainSceneRoot, 800, 500));
+        window.setTitle("Test game");
+        window.show();
+        window.setResizable(false);
+
     }
 
 
@@ -34,6 +39,7 @@ public class Main extends Application {
             System.out.println("Couldn't load the questions");
         }
     }
+
 
 
 }

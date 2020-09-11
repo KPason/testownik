@@ -10,13 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class QuestionsDataBase {
     private static QuestionsDataBase instance = new QuestionsDataBase();
     private final String fileName = "questionsItems.txt";
     private Path path = Paths.get(fileName);
-    private ArrayList<Question> questionsList;
+    private ObservableList<Question> questionsList;
     private ArrayList<Question> correctQuestionsList; // wystarczy chyba tylko counter zwykły ogarnąć
     private ArrayList<Question> wrongQuestionsList;
 
@@ -27,7 +28,7 @@ public class QuestionsDataBase {
         return instance;
     }
 
-    public ArrayList<Question> getQuestionsList() {
+    public ObservableList<Question> getQuestionsList() {
         return questionsList;
     }
 
@@ -40,7 +41,7 @@ public class QuestionsDataBase {
     }
 
     public void loadQuestions() throws IOException {
-        questionsList = new ArrayList<>();
+        questionsList = FXCollections.observableArrayList();
         wrongQuestionsList = new ArrayList<>();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String input;

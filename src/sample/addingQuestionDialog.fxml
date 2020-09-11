@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AddingQuestionsController"
+                prefWidth="500" prefHeight="500">
+
+    <content>
+        <GridPane vgap="20" hgap="20">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="300"/>
+                <ColumnConstraints prefWidth="500"/>
+            </columnConstraints>
+            <rowConstraints>
+
+            </rowConstraints>
+
+            <Label text="Question:"                             GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddQuestionTextField"       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Answer 1:"                             GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddFirstAnswerTextField"    GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Answer 2:"                             GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddSecondAnswerTextField"   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Answer 3:"                             GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddThirdAnswerTextField"    GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Answer 4:"                             GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddFourthAnswerTextField"   GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Correct answer:"                       GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="dialogAddCorrectAnswerTextField"  GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+        </GridPane>
+    </content>
+
+</DialogPane>

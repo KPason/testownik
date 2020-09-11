@@ -6,19 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 
-public class Controller {
+public class mainController {
     @FXML
     private RadioButton firstQuestionButton;
     @FXML
@@ -51,19 +48,20 @@ public class Controller {
     private int correctAnswersTotalNumber; // do licznika odpowiedzi
     private int wrongQuestionIndex = 0;
     private boolean isQuestionAnswered = false;
-    private ArrayList<Question> savedWrongQuestions = new ArrayList<>();;
+    private ArrayList<Question> savedWrongQuestions = new ArrayList<>();
+    ;
     private Question actualWrongQuestion;
     private String lastQuestion;
 
 
     public void initialize() {
-        disablingAndDismissingTheButtons("WELCOME TO THE GAME",true, true);
+        disablingAndDismissingTheButtons("WELCOME TO THE GAME", true, true);
         menuRestartButton.setDisable(true);
     }
 
     @FXML
-    public void startTheGame(){
-        disablingAndDismissingTheButtons(false,false);
+    public void startTheGame() {
+        disablingAndDismissingTheButtons(false, false);
         loadNextQuestion();
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
         nextQuestionButton.setDisable(true);
@@ -73,40 +71,39 @@ public class Controller {
     }
 
     @FXML
-    public void restartTheGame(){
-        try{
-        QuestionsDataBase.getInstance().saveQuestions();
-        }catch (IOException e){
+    public void restartTheGame() {
+        try {
+            QuestionsDataBase.getInstance().saveQuestions();
+        } catch (IOException e) {
             System.out.println("Couldn't save the questions when restarted the game");
         }
-        try{
+        try {
             QuestionsDataBase.getInstance().loadQuestions();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Couldn't load the questions when restarted the game");
         }
         //resetting all main variables
-        questionsCounter=0;
+        questionsCounter = 0;
         QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
         savedWrongQuestions.clear();
-        actualWrongQuestion=null;
-        wrongQuestionIndex=0;
+        actualWrongQuestion = null;
+        wrongQuestionIndex = 0;
         isQuestionAnswered = false;
-        //*********************WILL NEED TO ADD CORRECT ANSWERS COUNTER WHEN IMPLEMENTED PROBABLY ************************
-        disablingAndDismissingTheButtons(false,false);
+        disablingAndDismissingTheButtons(false, false);
         loadNextQuestion();
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
         nextQuestionButton.setDisable(true);
-
     }
 
-    @FXML
-    public void showRemovingQuestionDialog() {
+
+
+    public void showEditingQuestionsDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainWindowBorderPane.getScene().getWindow());
-        dialog.setTitle("Remove question");
+        dialog.setTitle("Editing questions");
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("removeQuestion.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("editingQuestionsDialog.fxml"));
             dialog.getDialogPane().setContent(root);
         } catch (IOException e) {
             System.out.println("Couldn't load remove question dialog");
@@ -118,34 +115,6 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             System.out.println("OK pressed");
-        }
-    }
-
-    @FXML
-    public void showAddingNewQuestionDialog() throws IOException {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.initOwner(mainWindowBorderPane.getScene().getWindow());
-        dialog.setTitle("Add question");
-        dialog.setHeaderText("Create new to do item");
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("addingQuestion.fxml"));
-
-        try {
-            dialog.getDialogPane().setContent(loader.load());
-
-        } catch (IOException e) {
-            System.out.println("Couldn't load dialog");
-            e.printStackTrace();
-        }
-
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        Optional<ButtonType> result = dialog.showAndWait();
-
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            AddingQuestionController controller = loader.getController();
-            controller.processResults();
         }
     }
 
@@ -214,7 +183,7 @@ public class Controller {
         } else if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0 || !(savedWrongQuestions.isEmpty())) {
 
             //copying saved again wrongly answered questions list to main wrong questions list
-            if(QuestionsDataBase.getInstance().getWrongQuestionsList().size() == 0){
+            if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() == 0) {
                 QuestionsDataBase.getInstance().getWrongQuestionsList().addAll(savedWrongQuestions);
                 savedWrongQuestions.clear();
             }
@@ -224,8 +193,8 @@ public class Controller {
             wrongQuestionIndex = random.nextInt(QuestionsDataBase.getInstance().getWrongQuestionsList().size());
 
             // checking last displayed question to avoid repeating the same one
-            while(lastQuestion.equals(QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getQuestion())
-                    && QuestionsDataBase.getInstance().getWrongQuestionsList().size()>1){
+            while (lastQuestion.equals(QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getQuestion())
+                    && QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 1) {
                 wrongQuestionIndex = random.nextInt(QuestionsDataBase.getInstance().getWrongQuestionsList().size());
             }
             actualWrongQuestion = QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex);
@@ -242,7 +211,7 @@ public class Controller {
 
         } else {
             // disabling buttons after all questions
-            disablingAndDismissingTheButtons("",true,true);
+            disablingAndDismissingTheButtons("", true, true);
         }
     }
 
@@ -259,8 +228,7 @@ public class Controller {
             //checking correct answers when wrong questions load
         } else if (answerToggleGroup.selectedToggleProperty() != null && QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0) {
             String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
-            String correctAnswer = QuestionsDataBase.getInstance().getWrongQuestionsList()
-                    .get(wrongQuestionIndex).getCorrectAnswer();
+            String correctAnswer = QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getCorrectAnswer();
 
             if (buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
                     .equals(correctAnswer)) {
@@ -277,17 +245,15 @@ public class Controller {
     }
 
 
-
-
-
-     public void disablingTheButtons(boolean disableButtons){
+    public void disablingTheButtons(boolean disableButtons) {
         firstQuestionButton.setDisable(disableButtons);
         secondQuestionButton.setDisable(disableButtons);
         thirdQuestionButton.setDisable(disableButtons);
         fourthQuestionButton.setDisable(disableButtons);
 
     }
-    public void dismissButtons(boolean dismissButtons){
+
+    public void dismissButtons(boolean dismissButtons) {
         firstQuestionButton.setVisible(!dismissButtons);
         secondQuestionButton.setVisible(!dismissButtons);
         thirdQuestionButton.setVisible(!dismissButtons);
@@ -296,12 +262,13 @@ public class Controller {
         checkingButton.setVisible(!dismissButtons);
     }
 
-    public void disablingAndDismissingTheButtons(String questionAreaText,boolean disableButtons, boolean dismissButtons){
+    public void disablingAndDismissingTheButtons(String questionAreaText, boolean disableButtons, boolean dismissButtons) {
         questionLabel.setText(questionAreaText);
         disablingTheButtons(disableButtons);
         dismissButtons(dismissButtons);
     }
-    public void disablingAndDismissingTheButtons(boolean disableButtons, boolean dismissButtons){
+
+    public void disablingAndDismissingTheButtons(boolean disableButtons, boolean dismissButtons) {
         disablingTheButtons(disableButtons);
         dismissButtons(dismissButtons);
     }
