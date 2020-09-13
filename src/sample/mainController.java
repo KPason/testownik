@@ -40,6 +40,8 @@ public class mainController {
     private MenuItem menuStartButton;
     @FXML
     private MenuItem menuRestartButton;
+    @FXML
+    private ButtonType OK;
 
 
     private int questionsCounter = 0;
