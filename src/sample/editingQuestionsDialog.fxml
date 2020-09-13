@@ -20,8 +20,10 @@
             <center>
                 <HBox spacing="20">
                     <VBox alignment="CENTER">
-                        <Label text="QUESTIONS"/>
-                        <ListView fx:id="questionsListView" prefWidth="300.0"/>
+                        <Label fx:id="labelAboveQuestionsTable"/>
+                        <ListView fx:id="questionsListView" prefWidth="300.0">
+                            <ContextMenu fx:id="editingQuestionsContextMenu"/>
+                        </ListView>
                     </VBox>
 
                     <VBox alignment="CENTER">

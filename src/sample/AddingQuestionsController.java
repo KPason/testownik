@@ -54,7 +54,6 @@ public class AddingQuestionsController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer);
             QuestionsDataBase.getInstance().addQuestion(newQuestion);
-            QuestionsDataBase.getInstance().saveQuestions();
         }
 
         return newQuestion;

@@ -19,7 +19,7 @@ public class Main extends Application {
         window = primaryStage;
         Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
         window.setScene(new Scene(mainSceneRoot, 800, 500));
-        window.setTitle("Test game");
+        window.setTitle("test game");
         window.show();
         window.setResizable(false);
 
@@ -32,14 +32,18 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        try{
-            QuestionsDataBase.getInstance().loadQuestions();
 
-        }catch (IOException e){
-            System.out.println("Couldn't load the questions");
-        }
     }
 
+    @Override
+    public void stop() throws Exception {
+        try{
+            QuestionsDataBase.getInstance().saveQuestions();
+            System.out.println("saving questions when closing");
 
-
+        }catch (IOException e){
+            System.out.println("Couldn't save the questions when closing the app");
+        }
+        super.stop();
+    }
 }

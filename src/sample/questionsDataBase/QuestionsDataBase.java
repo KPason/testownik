@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class QuestionsDataBase {
     private static QuestionsDataBase instance = new QuestionsDataBase();
@@ -20,6 +18,8 @@ public class QuestionsDataBase {
     private ObservableList<Question> questionsList;
     private ArrayList<Question> correctQuestionsList; // wystarczy chyba tylko counter zwykły ogarnąć
     private ArrayList<Question> wrongQuestionsList;
+    private ArrayList<Question> addedQuestionsList = new ArrayList<>();
+    private ArrayList<Question> deletedQuestionsList = new ArrayList<>();
 
     private QuestionsDataBase() {
     }
@@ -40,9 +40,18 @@ public class QuestionsDataBase {
         return wrongQuestionsList;
     }
 
+    public ArrayList<Question> getAddedQuestionsList() {
+        return addedQuestionsList;
+    }
+
+    public ArrayList<Question> getDeletedQuestionsList() {
+        return deletedQuestionsList;
+    }
+
     public void loadQuestions() throws IOException {
         questionsList = FXCollections.observableArrayList();
         wrongQuestionsList = new ArrayList<>();
+
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String input;
             while ((input = br.readLine()) != null) {
@@ -61,7 +70,15 @@ public class QuestionsDataBase {
     }
 
     public void saveQuestions() throws IOException {
+        //adjusting question list if any question has been added/removed during the game
+        if (!deletedQuestionsList.isEmpty()) {
+            for (Question deletedQuestion : deletedQuestionsList) {
+                    questionsList.remove(deletedQuestion);
+            }
+        }
+        questionsList.addAll(addedQuestionsList);
 
+        //saving to the file
         BufferedWriter bw = Files.newBufferedWriter(path);
         try {
 
@@ -81,13 +98,18 @@ public class QuestionsDataBase {
         questionsList.add(question);
     }
 
-    public void addWrongQuestion(Question question){
+    public void addWrongQuestion(Question question) {
         wrongQuestionsList.add(question);
     }
 
-    public Question getWrongQuestion(int questionNumber){
+    public Question getWrongQuestion(int questionNumber) {
         return wrongQuestionsList.get(questionNumber);
     }
+
+    public void deleteQuestion(Question question) {
+        questionsList.remove(question);
+    }
+
 
 }
 

@@ -42,26 +42,31 @@ public class mainController {
     private MenuItem menuRestartButton;
 
 
-
     private int questionsCounter = 0;
     private int correctAnswersCounter = 0;
     private int correctAnswersTotalNumber; // do licznika odpowiedzi
     private int wrongQuestionIndex = 0;
     private boolean isQuestionAnswered = false;
     private ArrayList<Question> savedWrongQuestions = new ArrayList<>();
-    ;
     private Question actualWrongQuestion;
     private String lastQuestion;
 
 
     public void initialize() {
-        disablingAndDismissingTheButtons("WELCOME TO THE GAME", true, true);
+        disableAndDismissingTheButtons("WELCOME TO THE GAME", true, true);
         menuRestartButton.setDisable(true);
     }
 
     @FXML
     public void startTheGame() {
-        disablingAndDismissingTheButtons(false, false);
+        try {
+            QuestionsDataBase.getInstance().loadQuestions();
+
+        } catch (IOException e) {
+            System.out.println("Couldn't load the questions");
+        }
+
+        disableAndDismissingTheButtons(false, false);
         loadNextQuestion();
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
         nextQuestionButton.setDisable(true);
@@ -90,15 +95,28 @@ public class mainController {
         actualWrongQuestion = null;
         wrongQuestionIndex = 0;
         isQuestionAnswered = false;
-        disablingAndDismissingTheButtons(false, false);
+        disableAndDismissingTheButtons(false, false);
         loadNextQuestion();
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
         nextQuestionButton.setDisable(true);
     }
 
 
-
     public void showEditingQuestionsDialog() {
+        //loading questions if game is not started yet and user want to edit them
+        if (!gameIsStarted()) {
+            try {
+                QuestionsDataBase.getInstance().loadQuestions();
+
+            } catch (IOException e) {
+                System.out.println("Couldn't load the questions");
+            }
+        }
+        //only show alert when the game is already started
+        if(gameIsStarted()){
+            showEditingQuestionsAlert();
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainWindowBorderPane.getScene().getWindow());
         dialog.setTitle("Editing questions");
@@ -110,12 +128,25 @@ public class mainController {
             e.printStackTrace();
         }
 
+
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result = dialog.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("OK pressed");
+
+        if (result.isPresent() && result.get() == ButtonType.OK && gameIsStarted()) {
+            try {
+                QuestionsDataBase.getInstance().saveQuestions();
+
+            } catch (IOException e) {
+                System.out.println("Couldn't load the questions");
+            }
+
+            System.out.println("OK pressed, questions saved.");
+        }else if(result.isPresent() && result.get() == ButtonType.OK){
+
         }
+
+
     }
 
     public void checkingTheAnswer() {
@@ -138,6 +169,7 @@ public class mainController {
             settingSceneAfterTheAnswer("red", "Wrong answer");
         }
 
+
     }
 
     public void settingSceneAfterTheAnswer(String textColour, String labelText) {
@@ -148,6 +180,7 @@ public class mainController {
 
         // making question answered and disabling buttons
         isQuestionAnswered = true;
+        disableRadioButtons(true);
         nextQuestionButton.setDisable(false);
         checkingButton.setDisable(true);
     }
@@ -166,6 +199,7 @@ public class mainController {
     public void loadNextQuestion() {
 
         answerToggleGroup.selectToggle(null);
+        disableRadioButtons(false);
         // loading NEXT question if there is any
         if (questionsCounter < QuestionsDataBase.getInstance().getQuestionsList().size()) {
             firstQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getFirstAnswer());
@@ -187,7 +221,6 @@ public class mainController {
                 QuestionsDataBase.getInstance().getWrongQuestionsList().addAll(savedWrongQuestions);
                 savedWrongQuestions.clear();
             }
-
 
             Random random = new Random();
             wrongQuestionIndex = random.nextInt(QuestionsDataBase.getInstance().getWrongQuestionsList().size());
@@ -211,7 +244,7 @@ public class mainController {
 
         } else {
             // disabling buttons after all questions
-            disablingAndDismissingTheButtons("", true, true);
+            disableAndDismissingTheButtons("", true, true);
         }
     }
 
@@ -245,12 +278,11 @@ public class mainController {
     }
 
 
-    public void disablingTheButtons(boolean disableButtons) {
+    public void disableRadioButtons(boolean disableButtons) {
         firstQuestionButton.setDisable(disableButtons);
         secondQuestionButton.setDisable(disableButtons);
         thirdQuestionButton.setDisable(disableButtons);
         fourthQuestionButton.setDisable(disableButtons);
-
     }
 
     public void dismissButtons(boolean dismissButtons) {
@@ -262,15 +294,28 @@ public class mainController {
         checkingButton.setVisible(!dismissButtons);
     }
 
-    public void disablingAndDismissingTheButtons(String questionAreaText, boolean disableButtons, boolean dismissButtons) {
+    public void disableAndDismissingTheButtons(String questionAreaText, boolean disableButtons, boolean dismissButtons) {
         questionLabel.setText(questionAreaText);
-        disablingTheButtons(disableButtons);
+        disableRadioButtons(disableButtons);
         dismissButtons(dismissButtons);
     }
 
-    public void disablingAndDismissingTheButtons(boolean disableButtons, boolean dismissButtons) {
-        disablingTheButtons(disableButtons);
+    public void disableAndDismissingTheButtons(boolean disableButtons, boolean dismissButtons) {
+        disableRadioButtons(disableButtons);
         dismissButtons(dismissButtons);
+    }
+
+    public void showEditingQuestionsAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("editing information");
+        alert.setHeaderText(null);
+        alert.setContentText("After adding or deleting any questions during the game you have to choose" +
+                " if you want to continue playing with an old set of questions or restart the game with a new set!");
+        alert.showAndWait();
+    }
+
+    private Boolean gameIsStarted(){
+        return menuStartButton.isDisable();
     }
 
 }

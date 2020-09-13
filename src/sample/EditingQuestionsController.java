@@ -4,8 +4,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
@@ -28,11 +28,59 @@ public class EditingQuestionsController {
     private TextArea correctAnswerTextArea;
     @FXML
     private DialogPane editingQuestionsDialogPane;
+    @FXML
+    private Label labelAboveQuestionsTable;
+    @FXML
+    private ContextMenu editingQuestionsContextMenu;
+
+    private boolean isQuestionsListChanged;
 
 
     public void initialize() {
+        //populating list view
+        isQuestionsListChanged= false;
+        labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
         questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList()); //using Data Binding with ObservableArrayList via Collections.
         questionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        //setting context menu and menu item(s)
+        editingQuestionsContextMenu = new ContextMenu();
+        MenuItem deleteMenuItem = new MenuItem("delete");
+        deleteMenuItem.setOnAction(actionEvent -> {
+            Question item = questionsListView.getSelectionModel().getSelectedItem();
+            deleteItem(item);
+            System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
+        });
+        editingQuestionsContextMenu.getItems().addAll(deleteMenuItem);
+
+        //associating context menu with list view's cell factory and setting cell's text
+        questionsListView.setCellFactory(new Callback<ListView<Question>, ListCell<Question>>() {
+            @Override
+            public ListCell<Question> call(ListView<Question> questionListView) {
+                ListCell<Question> cell = new ListCell<>() {
+                    @Override
+                    protected void updateItem(Question item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getQuestion());
+                        }
+                    }
+                };
+                cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                    if (isNowEmpty) {
+                        cell.setContextMenu(null);
+                    } else {
+                        cell.setContextMenu(editingQuestionsContextMenu);
+                    }
+                });
+
+                return cell;
+            }
+        });
+
+        //setting text areas
         questionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Question>() {
             @Override
             public void changed(ObservableValue<? extends Question> observableValue, Question question, Question newValue) {
@@ -43,11 +91,10 @@ public class EditingQuestionsController {
             }
         });
 
+        System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
     }
 
     public void showAddingNewQuestionDialog() throws IOException {
-
-      //  *************IT NEEDS A LOT OF VALIDATION*****************
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(editingQuestionsDialogPane.getScene().getWindow());
@@ -67,19 +114,16 @@ public class EditingQuestionsController {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         Optional<ButtonType> result = dialog.showAndWait();
 
-
         if (result.isPresent() && result.get() == ButtonType.OK) {
             AddingQuestionsController controller = loader.getController();
             Question newQuestion = controller.processResults();
+            labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
             questionsListView.getSelectionModel().select(newQuestion);
+            isQuestionsListChanged=true;
         }
+        System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
     }
 
-    public void handleClickListView() {
-        Question item = questionsListView.getSelectionModel().getSelectedItem();
-        System.out.println("The selected item is " + item);
-        setTextAreas(item);
-    }
 
     public void setTextAreas(Question item) {
         firstAnswerTextArea.setText(item.getFirstAnswer());
@@ -92,6 +136,38 @@ public class EditingQuestionsController {
         thirdAnswerTextArea.setEditable(false);
         fourthAnswerTextArea.setEditable(false);
         correctAnswerTextArea.setEditable(false);
+    }
+
+    public void limitLength(int maxLength, TextField t) {
+        t.lengthProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                                Number oldValue, Number newValue) {
+                if (newValue.intValue() > oldValue.intValue()) {
+                    // Check if the new character is greater than LIMIT
+                    if (t.getText().length() >= maxLength) {
+
+                        t.setText(t.getText().substring(0, maxLength));
+                    }
+                }
+            }
+        });
+    }
+
+    public void deleteItem(Question question) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("delete question");
+        alert.setHeaderText("Deleting question \"" + question.getQuestion() + "\"");
+        alert.setContentText("Are you sure? Press OK to confirm, or cancel to go back");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            QuestionsDataBase.getInstance().deleteQuestion(question);
+            QuestionsDataBase.getInstance().getDeletedQuestionsList().add(question);
+            labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
+            isQuestionsListChanged=true;
+        }
     }
 
 
