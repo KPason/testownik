@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Random;
 
 
-public class mainController {
+public class MainController {
     @FXML
     private RadioButton firstQuestionButton;
     @FXML
@@ -40,8 +40,6 @@ public class mainController {
     private MenuItem menuStartButton;
     @FXML
     private MenuItem menuRestartButton;
-    @FXML
-    private ButtonType OK;
 
 
     private int questionsCounter = 0;
@@ -74,6 +72,9 @@ public class mainController {
         nextQuestionButton.setDisable(true);
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
+        if(QuestionsDataBase.getInstance().getQuestionsList().size()==0){
+            System.out.println("Questions base is empty do sthg about it");
+        }
 
     }
 
@@ -93,29 +94,27 @@ public class mainController {
         //resetting all main variables
         questionsCounter = 0;
         QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
+        QuestionsDataBase.getInstance().getAddedQuestionsList().clear();
+        QuestionsDataBase.getInstance().getDeletedQuestionsList().clear();
         savedWrongQuestions.clear();
         actualWrongQuestion = null;
         wrongQuestionIndex = 0;
         isQuestionAnswered = false;
         disableAndDismissingTheButtons(false, false);
         loadNextQuestion();
+        System.out.println("Questions base is empty do sthg about it");
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
         nextQuestionButton.setDisable(true);
+
     }
 
 
-    public void showEditingQuestionsDialog() {
-        //loading questions if game is not started yet and user want to edit them
-        if (!gameIsStarted()) {
-            try {
-                QuestionsDataBase.getInstance().loadQuestions();
+    public void showEditingQuestionsDialog() throws IOException {
 
-            } catch (IOException e) {
-                System.out.println("Couldn't load the questions");
-            }
-        }
+        QuestionsDataBase.getInstance().loadQuestions();
+
         //only show alert when the game is already started
-        if(gameIsStarted()){
+        if (gameIsStarted()) {
             showEditingQuestionsAlert();
         }
 
@@ -131,21 +130,40 @@ public class mainController {
         }
 
 
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
+        //loading questions if game is not started yet and user want to edit them
+        if (!gameIsStarted()) {
 
-        if (result.isPresent() && result.get() == ButtonType.OK && gameIsStarted()) {
-            try {
+            ButtonType save = new ButtonType("Save changes", ButtonType.OK.getButtonData());
+            ButtonType cancel = new ButtonType("Don't save changes", ButtonType.CANCEL.getButtonData());
+            dialog.getDialogPane().getButtonTypes().add(save);
+            dialog.getDialogPane().getButtonTypes().add(cancel);
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            if (result.isPresent() && result.get() == save) {
                 QuestionsDataBase.getInstance().saveQuestions();
-
-            } catch (IOException e) {
-                System.out.println("Couldn't load the questions");
             }
 
-            System.out.println("OK pressed, questions saved.");
-        }else if(result.isPresent() && result.get() == ButtonType.OK){
+        } else {
 
+            ButtonType saveAndRestart = new ButtonType("save and restart");
+            ButtonType saveAndContinue = new ButtonType("save and continue");
+            dialog.getDialogPane().getButtonTypes().add(saveAndRestart);
+            dialog.getDialogPane().getButtonTypes().add(saveAndContinue);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            if (result.isPresent() && result.get() == saveAndRestart) {
+                try {
+                    QuestionsDataBase.getInstance().saveQuestions();
+                    restartTheGame();
+                } catch (IOException e) {
+                    System.out.println("Couldn't save the questions when saveAndRestart button pressed");
+                }
+
+                System.out.println("OK pressed, questions saved.");
+            } else if (result.isPresent() && result.get() == saveAndContinue) {
+                    dialog.close();
+            }
         }
 
 
@@ -211,14 +229,14 @@ public class mainController {
             questionLabel.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getQuestion());
             checkingButton.setDisable(false);
             nextQuestionButton.setDisable(true);
-            // saving last question to not repeat the last one when redoing wrong questions in quiz
+            // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
             lastQuestion = QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getQuestion();
 
 
             // loading WRONG question if there is any
         } else if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0 || !(savedWrongQuestions.isEmpty())) {
 
-            //copying saved again wrongly answered questions list to main wrong questions list
+            //saving renewed wrongly answered questions to main wrong questions list
             if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() == 0) {
                 QuestionsDataBase.getInstance().getWrongQuestionsList().addAll(savedWrongQuestions);
                 savedWrongQuestions.clear();
@@ -316,7 +334,7 @@ public class mainController {
         alert.showAndWait();
     }
 
-    private Boolean gameIsStarted(){
+    private boolean gameIsStarted() {
         return menuStartButton.isDisable();
     }
 

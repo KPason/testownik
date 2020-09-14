@@ -18,8 +18,8 @@ public class QuestionsDataBase {
     private ObservableList<Question> questionsList;
     private ArrayList<Question> correctQuestionsList; // wystarczy chyba tylko counter zwykły ogarnąć
     private ArrayList<Question> wrongQuestionsList;
-    private ArrayList<Question> addedQuestionsList = new ArrayList<>();
-    private ArrayList<Question> deletedQuestionsList = new ArrayList<>();
+    private ObservableList<Question> addedQuestionsList = FXCollections.observableArrayList();
+    private ObservableList<Question> deletedQuestionsList = FXCollections.observableArrayList();
 
     private QuestionsDataBase() {
     }
@@ -40,18 +40,17 @@ public class QuestionsDataBase {
         return wrongQuestionsList;
     }
 
-    public ArrayList<Question> getAddedQuestionsList() {
+    public ObservableList<Question> getAddedQuestionsList() {
         return addedQuestionsList;
     }
 
-    public ArrayList<Question> getDeletedQuestionsList() {
+    public ObservableList<Question> getDeletedQuestionsList() {
         return deletedQuestionsList;
     }
 
-    public void loadQuestions() throws IOException {
-        questionsList = FXCollections.observableArrayList();
+    public ObservableList<Question> loadQuestions() throws IOException {
         wrongQuestionsList = new ArrayList<>();
-
+        questionsList = FXCollections.observableArrayList();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String input;
             while ((input = br.readLine()) != null) {
@@ -67,6 +66,7 @@ public class QuestionsDataBase {
 
             }
         }
+        return questionsList;
     }
 
     public void saveQuestions() throws IOException {

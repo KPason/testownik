@@ -13,8 +13,9 @@ public class Main extends Application {
 
     private Stage window;
 
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
         window = primaryStage;
         Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
@@ -32,18 +33,26 @@ public class Main extends Application {
 
     @Override
     public void init() {
+        try {
+            QuestionsDataBase.getInstance().loadQuestions();
 
+        } catch (IOException e) {
+            System.out.println("Couldn't load the questions when opening the app");
+        }
     }
 
     @Override
     public void stop() throws Exception {
-        try{
-            QuestionsDataBase.getInstance().saveQuestions();
-            System.out.println("saving questions when closing");
 
-        }catch (IOException e){
-            System.out.println("Couldn't save the questions when closing the app");
+            try {
+                QuestionsDataBase.getInstance().saveQuestions();
+                System.out.println("saving questions when closing");
+
+            } catch (IOException e) {
+                System.out.println("Couldn't save the questions when closing the app");
+            }
+
+
+            super.stop();
         }
-        super.stop();
     }
-}

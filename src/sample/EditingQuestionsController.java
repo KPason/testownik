@@ -2,6 +2,8 @@ package sample;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -11,6 +13,7 @@ import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Queue;
 
 public class EditingQuestionsController {
 
@@ -38,9 +41,27 @@ public class EditingQuestionsController {
 
     public void initialize() {
         //populating list view
-        isQuestionsListChanged= false;
+        isQuestionsListChanged = false;
         labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
-        questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList()); //using Data Binding with ObservableArrayList via Collections.
+
+        if (!QuestionsDataBase.getInstance().getAddedQuestionsList().isEmpty() || !QuestionsDataBase.getInstance().getDeletedQuestionsList().isEmpty()) {
+            ObservableList<Question> questionsList = FXCollections.observableArrayList();
+            questionsList.addAll(QuestionsDataBase.getInstance().getQuestionsList());
+            System.out.println("added from original list: " + QuestionsDataBase.getInstance().getQuestionsList().toString());
+            questionsList.addAll(QuestionsDataBase.getInstance().getAddedQuestionsList());
+            System.out.println("added from added questions list: " + QuestionsDataBase.getInstance().getAddedQuestionsList().toString());
+            for(Question question : QuestionsDataBase.getInstance().getDeletedQuestionsList()){
+
+                System.out.println(questionsList.remove(question) + " removing a question: " + question.toString());
+            }
+//            questionsList.removeAll(QuestionsDataBase.getInstance().getDeletedQuestionsList());
+            System.out.println("deleted from delete questions list: " + QuestionsDataBase.getInstance().getDeletedQuestionsList().toString());
+            System.out.println("final questionsList passed to listView " + questionsList.toString());
+            questionsListView.setItems(questionsList);
+        } else {
+            questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList());//using Data Binding with ObservableArrayList via Collections.
+
+        }
         questionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //setting context menu and menu item(s)
@@ -102,6 +123,7 @@ public class EditingQuestionsController {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("addingQuestionDialog.fxml"));
 
+
         try {
             dialog.getDialogPane().setContent(loader.load());
 
@@ -119,7 +141,7 @@ public class EditingQuestionsController {
             Question newQuestion = controller.processResults();
             labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
             questionsListView.getSelectionModel().select(newQuestion);
-            isQuestionsListChanged=true;
+            isQuestionsListChanged = true;
         }
         System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
     }
@@ -131,6 +153,19 @@ public class EditingQuestionsController {
         thirdAnswerTextArea.setText(item.getThirdAnswer());
         fourthAnswerTextArea.setText(item.getFourthAnswer());
         correctAnswerTextArea.setText(item.getCorrectAnswer());
+        firstAnswerTextArea.setEditable(false);
+        secondAnswerTextArea.setEditable(false);
+        thirdAnswerTextArea.setEditable(false);
+        fourthAnswerTextArea.setEditable(false);
+        correctAnswerTextArea.setEditable(false);
+    }
+
+    public void setTextAreas(String string) {
+        firstAnswerTextArea.setText(string);
+        secondAnswerTextArea.setText(string);
+        thirdAnswerTextArea.setText(string);
+        fourthAnswerTextArea.setText(string);
+        correctAnswerTextArea.setText(string);
         firstAnswerTextArea.setEditable(false);
         secondAnswerTextArea.setEditable(false);
         thirdAnswerTextArea.setEditable(false);
@@ -166,9 +201,10 @@ public class EditingQuestionsController {
             QuestionsDataBase.getInstance().deleteQuestion(question);
             QuestionsDataBase.getInstance().getDeletedQuestionsList().add(question);
             labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
-            isQuestionsListChanged=true;
+            isQuestionsListChanged = true;
+            if (QuestionsDataBase.getInstance().getQuestionsList().size() == 0) {
+                setTextAreas("");
+            }
         }
     }
-
-
 }

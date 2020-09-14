@@ -44,7 +44,6 @@ public class AddingQuestionsController {
         String fourthAnswer = dialogAddFourthAnswerTextField.getText().trim();
         String correctAnswer = dialogAddCorrectAnswerTextField.getText().trim();
         Question newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer);
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm adding");
         alert.setHeaderText("Are you sure that you want to add question: " + question);
@@ -53,7 +52,8 @@ public class AddingQuestionsController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer);
-            QuestionsDataBase.getInstance().addQuestion(newQuestion);
+            QuestionsDataBase.getInstance().getQuestionsList().add(newQuestion);
+            QuestionsDataBase.getInstance().getAddedQuestionsList().add(newQuestion);
         }
 
         return newQuestion;
