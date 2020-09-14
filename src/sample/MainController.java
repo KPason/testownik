@@ -11,6 +11,7 @@ import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -42,9 +43,10 @@ public class MainController {
     private MenuItem menuRestartButton;
 
 
+    private ArrayList<Question> startedQuestionsList;
     private int questionsCounter = 0;
-    private int correctAnswersTotalNumber=0;
-    private int correctAnswersCounter=0;
+    private int correctAnswersTotalNumber = 0;
+    private int correctAnswersCounter = 0;
 
     private int wrongQuestionIndex = 0;
 
@@ -65,19 +67,20 @@ public class MainController {
     @FXML
     public void startTheGame() {
         try {
+            startedQuestionsList = new ArrayList<>();
             QuestionsDataBase.getInstance().loadQuestions();
-
+            startedQuestionsList.addAll(QuestionsDataBase.getInstance().getQuestionsList());
         } catch (IOException e) {
             System.out.println("Couldn't load the questions");
         }
 
         disableAndDismissingTheButtons(false, false);
-        loadNextQuestion();
-        correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
+        loadNextQuestion(startedQuestionsList);
+        correctAnswersTotalNumber = startedQuestionsList.size();
         nextQuestionButton.setDisable(true);
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
-        if(QuestionsDataBase.getInstance().getQuestionsList().size()==0){
+        if (startedQuestionsList.size() == 0) {
             System.out.println("Questions base is empty do sthg about it");
         }
 
@@ -86,25 +89,24 @@ public class MainController {
     @FXML
     public void restartTheGame() {
 
-        try {
-            QuestionsDataBase.getInstance().loadQuestions();
-
-        } catch (IOException e) {
-            System.out.println("Couldn't load the questions when restarted the game");
-        }
 
         //resetting all main variables
+        try {
+            QuestionsDataBase.getInstance().saveQuestions();
+        } catch (IOException e) {
+            e.getMessage();
+        }
         questionsCounter = 0;
-        correctAnswersCounter=0;
+        correctAnswersCounter = 0;
         QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
         savedWrongQuestions.clear();
         actualWrongQuestion = null;
         wrongQuestionIndex = 0;
         isQuestionAnswered = false;
         disableAndDismissingTheButtons(false, false);
-        correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
-        loadNextQuestion();
         nextQuestionButton.setDisable(true);
+
+        startTheGame();
 
     }
 
@@ -133,8 +135,8 @@ public class MainController {
         //loading questions if game is not started yet and user want to edit them
         if (!gameIsStarted()) {
 
-            ButtonType save = new ButtonType("Save changes", ButtonType.OK.getButtonData());
-            ButtonType cancel = new ButtonType("Don't save changes", ButtonType.CANCEL.getButtonData());
+            ButtonType save = new ButtonType("save changes", ButtonType.OK.getButtonData());
+            ButtonType cancel = new ButtonType("don't save changes", ButtonType.CANCEL.getButtonData());
             dialog.getDialogPane().getButtonTypes().add(save);
             dialog.getDialogPane().getButtonTypes().add(cancel);
             Optional<ButtonType> result = dialog.showAndWait();
@@ -147,22 +149,19 @@ public class MainController {
 
             ButtonType saveAndRestart = new ButtonType("save and restart");
             ButtonType saveAndContinue = new ButtonType("save and continue");
+            ButtonType cancel = new ButtonType("cancel all actions", ButtonType.CLOSE.getButtonData());
             dialog.getDialogPane().getButtonTypes().add(saveAndRestart);
             dialog.getDialogPane().getButtonTypes().add(saveAndContinue);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            dialog.getDialogPane().getButtonTypes().add(cancel);
             Optional<ButtonType> result = dialog.showAndWait();
 
             if (result.isPresent() && result.get() == saveAndRestart) {
-                try {
-                    QuestionsDataBase.getInstance().saveQuestions();
-                    restartTheGame();
-                } catch (IOException e) {
-                    System.out.println("Couldn't save the questions when saveAndRestart button pressed");
-                }
 
-                System.out.println("OK pressed, questions saved.");
+                restartTheGame();
+
             } else if (result.isPresent() && result.get() == saveAndContinue) {
-                    dialog.close();
+                QuestionsDataBase.getInstance().saveQuestions();
+                dialog.close();
             }
         }
 
@@ -184,7 +183,7 @@ public class MainController {
 
             //adding failed question to wrong questions' list
             if (QuestionsDataBase.getInstance().getQuestionsList().size() > questionsCounter) {
-                QuestionsDataBase.getInstance().addWrongQuestion(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter));
+                QuestionsDataBase.getInstance().addWrongQuestion(startedQuestionsList.get(questionsCounter));
             }
             settingSceneAfterTheAnswer("red", "Wrong answer");
         }
@@ -210,27 +209,27 @@ public class MainController {
         if (isQuestionAnswered) {
             checkingButton.setTextFill(Paint.valueOf("black"));
             resultLabel.setText("");
-            loadNextQuestion();
+            loadNextQuestion(startedQuestionsList);
             isQuestionAnswered = false;
         }
 
     }
 
-    public void loadNextQuestion() {
+    public void loadNextQuestion(List<Question> list) {
 
         answerToggleGroup.selectToggle(null);
         disableRadioButtons(false);
         // loading NEXT question if there is any
-        if (questionsCounter < QuestionsDataBase.getInstance().getQuestionsList().size()) {
-            firstQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getFirstAnswer());
-            secondQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getSecondAnswer());
-            thirdQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getThirdAnswer());
-            fourthQuestionButton.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getFourthAnswer());
-            questionLabel.setText(QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getQuestion());
+        if (questionsCounter < list.size()) {
+            firstQuestionButton.setText(list.get(questionsCounter).getFirstAnswer());
+            secondQuestionButton.setText(list.get(questionsCounter).getSecondAnswer());
+            thirdQuestionButton.setText(list.get(questionsCounter).getThirdAnswer());
+            fourthQuestionButton.setText(list.get(questionsCounter).getFourthAnswer());
+            questionLabel.setText(list.get(questionsCounter).getQuestion());
             checkingButton.setDisable(false);
             nextQuestionButton.setDisable(true);
             // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
-            lastQuestion = QuestionsDataBase.getInstance().getQuestionsList().get(questionsCounter).getQuestion();
+            lastQuestion = list.get(questionsCounter).getQuestion();
 
 
             // loading WRONG question if there is any
@@ -271,10 +270,9 @@ public class MainController {
     public boolean isCorrectAnswerChose() {
 
         //checking correct answers before ending the basic set
-        if (answerToggleGroup.selectedToggleProperty() != null && questionsCounter < QuestionsDataBase.getInstance().getQuestionsList().size()) {
+        if (answerToggleGroup.selectedToggleProperty() != null && questionsCounter < startedQuestionsList.size()) {
             String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
-            String correctAnswer = QuestionsDataBase.getInstance().getQuestionsList()
-                    .get(questionsCounter).getCorrectAnswer();
+            String correctAnswer = startedQuestionsList.get(questionsCounter).getCorrectAnswer();
             return buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
                     .equals(correctAnswer);
 

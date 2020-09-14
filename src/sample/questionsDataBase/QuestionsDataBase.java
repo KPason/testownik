@@ -18,7 +18,7 @@ public class QuestionsDataBase {
 
     private ObservableList<Question> questionsList;
 
-    private ArrayList<Question> wrongQuestionsList;
+    private ArrayList<Question> wrongQuestionsList = wrongQuestionsList = new ArrayList<>();
 
 
     private QuestionsDataBase() {
@@ -38,7 +38,6 @@ public class QuestionsDataBase {
 
 
     public void loadQuestions() throws IOException {
-        wrongQuestionsList = new ArrayList<>();
         questionsList = FXCollections.observableArrayList();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String input;
