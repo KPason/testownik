@@ -43,25 +43,7 @@ public class EditingQuestionsController {
         //populating list view
         isQuestionsListChanged = false;
         labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
-
-        if (!QuestionsDataBase.getInstance().getAddedQuestionsList().isEmpty() || !QuestionsDataBase.getInstance().getDeletedQuestionsList().isEmpty()) {
-            ObservableList<Question> questionsList = FXCollections.observableArrayList();
-            questionsList.addAll(QuestionsDataBase.getInstance().getQuestionsList());
-            System.out.println("added from original list: " + QuestionsDataBase.getInstance().getQuestionsList().toString());
-            questionsList.addAll(QuestionsDataBase.getInstance().getAddedQuestionsList());
-            System.out.println("added from added questions list: " + QuestionsDataBase.getInstance().getAddedQuestionsList().toString());
-            for(Question question : QuestionsDataBase.getInstance().getDeletedQuestionsList()){
-
-                System.out.println(questionsList.remove(question) + " removing a question: " + question.toString());
-            }
-//            questionsList.removeAll(QuestionsDataBase.getInstance().getDeletedQuestionsList());
-            System.out.println("deleted from delete questions list: " + QuestionsDataBase.getInstance().getDeletedQuestionsList().toString());
-            System.out.println("final questionsList passed to listView " + questionsList.toString());
-            questionsListView.setItems(questionsList);
-        } else {
-            questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList());//using Data Binding with ObservableArrayList via Collections.
-
-        }
+        questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList());
         questionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //setting context menu and menu item(s)
@@ -199,7 +181,7 @@ public class EditingQuestionsController {
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             QuestionsDataBase.getInstance().deleteQuestion(question);
-            QuestionsDataBase.getInstance().getDeletedQuestionsList().add(question);
+
             labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
             isQuestionsListChanged = true;
             if (QuestionsDataBase.getInstance().getQuestionsList().size() == 0) {

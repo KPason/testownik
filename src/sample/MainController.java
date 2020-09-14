@@ -43,12 +43,17 @@ public class MainController {
 
 
     private int questionsCounter = 0;
-    private int correctAnswersCounter = 0;
-    private int correctAnswersTotalNumber; // do licznika odpowiedzi
+    private int correctAnswersTotalNumber=0;
+    private int correctAnswersCounter=0;
+
     private int wrongQuestionIndex = 0;
+
     private boolean isQuestionAnswered = false;
+
     private ArrayList<Question> savedWrongQuestions = new ArrayList<>();
+
     private Question actualWrongQuestion;
+
     private String lastQuestion;
 
 
@@ -80,30 +85,25 @@ public class MainController {
 
     @FXML
     public void restartTheGame() {
-        try {
-            QuestionsDataBase.getInstance().saveQuestions();
-        } catch (IOException e) {
-            System.out.println("Couldn't save the questions when restarted the game");
-        }
+
         try {
             QuestionsDataBase.getInstance().loadQuestions();
 
         } catch (IOException e) {
             System.out.println("Couldn't load the questions when restarted the game");
         }
+
         //resetting all main variables
         questionsCounter = 0;
+        correctAnswersCounter=0;
         QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
-        QuestionsDataBase.getInstance().getAddedQuestionsList().clear();
-        QuestionsDataBase.getInstance().getDeletedQuestionsList().clear();
         savedWrongQuestions.clear();
         actualWrongQuestion = null;
         wrongQuestionIndex = 0;
         isQuestionAnswered = false;
         disableAndDismissingTheButtons(false, false);
-        loadNextQuestion();
-        System.out.println("Questions base is empty do sthg about it");
         correctAnswersTotalNumber = QuestionsDataBase.getInstance().getQuestionsList().size();
+        loadNextQuestion();
         nextQuestionButton.setDisable(true);
 
     }

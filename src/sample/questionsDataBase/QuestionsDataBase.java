@@ -15,11 +15,11 @@ public class QuestionsDataBase {
     private static QuestionsDataBase instance = new QuestionsDataBase();
     private final String fileName = "questionsItems.txt";
     private Path path = Paths.get(fileName);
+
     private ObservableList<Question> questionsList;
-    private ArrayList<Question> correctQuestionsList; // wystarczy chyba tylko counter zwykły ogarnąć
+
     private ArrayList<Question> wrongQuestionsList;
-    private ObservableList<Question> addedQuestionsList = FXCollections.observableArrayList();
-    private ObservableList<Question> deletedQuestionsList = FXCollections.observableArrayList();
+
 
     private QuestionsDataBase() {
     }
@@ -32,23 +32,12 @@ public class QuestionsDataBase {
         return questionsList;
     }
 
-    public ArrayList<Question> getCorrectQuestionsList() {
-        return correctQuestionsList;
-    }
-
     public ArrayList<Question> getWrongQuestionsList() {
         return wrongQuestionsList;
     }
 
-    public ObservableList<Question> getAddedQuestionsList() {
-        return addedQuestionsList;
-    }
 
-    public ObservableList<Question> getDeletedQuestionsList() {
-        return deletedQuestionsList;
-    }
-
-    public ObservableList<Question> loadQuestions() throws IOException {
+    public void loadQuestions() throws IOException {
         wrongQuestionsList = new ArrayList<>();
         questionsList = FXCollections.observableArrayList();
         try (BufferedReader br = Files.newBufferedReader(path)) {
@@ -66,17 +55,9 @@ public class QuestionsDataBase {
 
             }
         }
-        return questionsList;
     }
 
     public void saveQuestions() throws IOException {
-        //adjusting question list if any question has been added/removed during the game
-        if (!deletedQuestionsList.isEmpty()) {
-            for (Question deletedQuestion : deletedQuestionsList) {
-                    questionsList.remove(deletedQuestion);
-            }
-        }
-        questionsList.addAll(addedQuestionsList);
 
         //saving to the file
         BufferedWriter bw = Files.newBufferedWriter(path);
@@ -94,16 +75,8 @@ public class QuestionsDataBase {
         }
     }
 
-    public void addQuestion(Question question) {
-        questionsList.add(question);
-    }
-
     public void addWrongQuestion(Question question) {
         wrongQuestionsList.add(question);
-    }
-
-    public Question getWrongQuestion(int questionNumber) {
-        return wrongQuestionsList.get(questionNumber);
     }
 
     public void deleteQuestion(Question question) {
