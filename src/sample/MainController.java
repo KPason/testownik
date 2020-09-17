@@ -147,9 +147,10 @@ public class MainController {
 
         } else {
 
-            ButtonType saveAndRestart = new ButtonType("save and restart");
-            ButtonType saveAndContinue = new ButtonType("save and continue");
+            ButtonType saveAndRestart = new ButtonType("save and restart", ButtonType.OK.getButtonData());
+            ButtonType saveAndContinue = new ButtonType("save and continue", ButtonType.OK.getButtonData());
             ButtonType cancel = new ButtonType("cancel all actions", ButtonType.CLOSE.getButtonData());
+
             dialog.getDialogPane().getButtonTypes().add(saveAndRestart);
             dialog.getDialogPane().getButtonTypes().add(saveAndContinue);
             dialog.getDialogPane().getButtonTypes().add(cancel);
@@ -164,8 +165,6 @@ public class MainController {
                 dialog.close();
             }
         }
-
-
     }
 
     public void checkingTheAnswer() {

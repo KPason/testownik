@@ -2,8 +2,6 @@ package sample;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -13,7 +11,6 @@ import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Queue;
 
 public class EditingQuestionsController {
 
@@ -36,12 +33,9 @@ public class EditingQuestionsController {
     @FXML
     private ContextMenu editingQuestionsContextMenu;
 
-    private boolean isQuestionsListChanged;
-
 
     public void initialize() {
         //populating list view
-        isQuestionsListChanged = false;
         labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
         questionsListView.setItems(QuestionsDataBase.getInstance().getQuestionsList());
         questionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -52,7 +46,7 @@ public class EditingQuestionsController {
         deleteMenuItem.setOnAction(actionEvent -> {
             Question item = questionsListView.getSelectionModel().getSelectedItem();
             deleteItem(item);
-            System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
+
         });
         editingQuestionsContextMenu.getItems().addAll(deleteMenuItem);
 
@@ -94,7 +88,7 @@ public class EditingQuestionsController {
             }
         });
 
-        System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
+
     }
 
     public void showAddingNewQuestionDialog() throws IOException {
@@ -121,11 +115,20 @@ public class EditingQuestionsController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             AddingQuestionsController controller = loader.getController();
             Question newQuestion = controller.processResults();
+
+            while (newQuestion == null) {
+                result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    break;
+                }
+                controller = loader.getController();
+                newQuestion = controller.processResults();
+            }
             labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
             questionsListView.getSelectionModel().select(newQuestion);
-            isQuestionsListChanged = true;
+
         }
-        System.out.println("IS LIST CHANGED: " + isQuestionsListChanged);
+
     }
 
 
@@ -155,22 +158,6 @@ public class EditingQuestionsController {
         correctAnswerTextArea.setEditable(false);
     }
 
-    public void limitLength(int maxLength, TextField t) {
-        t.lengthProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                                Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    // Check if the new character is greater than LIMIT
-                    if (t.getText().length() >= maxLength) {
-
-                        t.setText(t.getText().substring(0, maxLength));
-                    }
-                }
-            }
-        });
-    }
 
     public void deleteItem(Question question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -183,7 +170,6 @@ public class EditingQuestionsController {
             QuestionsDataBase.getInstance().deleteQuestion(question);
 
             labelAboveQuestionsTable.setText("QUESTIONS: " + QuestionsDataBase.getInstance().getQuestionsList().size());
-            isQuestionsListChanged = true;
             if (QuestionsDataBase.getInstance().getQuestionsList().size() == 0) {
                 setTextAreas("");
             }

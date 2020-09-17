@@ -49,7 +49,9 @@ public class QuestionsDataBase {
                 String answer3 = questionPieces[3];
                 String answer4 = questionPieces[4];
                 String correctAnswer = questionPieces[5];
-                Question addedQuestion = new Question(question, answer1, answer2, answer3, answer4, correctAnswer);
+                String answersNumber = questionPieces[6];
+                int answersNumberInt = Integer.parseInt(answersNumber);
+                Question addedQuestion = new Question(question, answer1, answer2, answer3, answer4, correctAnswer, answersNumberInt);
                 questionsList.add(addedQuestion);
 
             }
@@ -63,8 +65,8 @@ public class QuestionsDataBase {
         try {
 
             for (Question question : questionsList) {
-                bw.write(String.format("%s\t%s\t%s\t%s\t%s\t%s", question.getQuestion(), question.getFirstAnswer(), question.getSecondAnswer(),
-                        question.getThirdAnswer(), question.getFourthAnswer(), question.getCorrectAnswer()));
+                bw.write(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s", question.getQuestion(), question.getFirstAnswer(), question.getSecondAnswer(),
+                        question.getThirdAnswer(), question.getFourthAnswer(), question.getCorrectAnswer(),question.getAnswersNumber()));
                 bw.newLine();
             }
         } finally {

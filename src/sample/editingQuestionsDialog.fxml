@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane fx:id="editingQuestionsDialogPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditingQuestionsController">
+<DialogPane fx:id="editingQuestionsDialogPane" prefWidth="540.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditingQuestionsController">
 
     <content>
         <BorderPane>
@@ -26,9 +26,7 @@
                     </VBox>
 
                     <VBox alignment="CENTER">
-                        <Label text="first answer">
-
-                        </Label>
+                        <Label text="first answer"/>
                         <TextArea fx:id="firstAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                         <Label text="second answer">
                         </Label>
