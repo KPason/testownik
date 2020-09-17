@@ -133,17 +133,36 @@ public class EditingQuestionsController {
 
 
     public void setTextAreas(Question item) {
-        firstAnswerTextArea.setText(item.getFirstAnswer());
-        secondAnswerTextArea.setText(item.getSecondAnswer());
-        thirdAnswerTextArea.setText(item.getThirdAnswer());
-        fourthAnswerTextArea.setText(item.getFourthAnswer());
+
+        if(item.getFirstAnswer().equals("**empty**")){
+            firstAnswerTextArea.setText("");
+        }else{
+            firstAnswerTextArea.setText(item.getFirstAnswer());
+        }
+        if(item.getSecondAnswer().equals("**empty**")){
+            secondAnswerTextArea.setText("");
+        }else{
+            secondAnswerTextArea.setText(item.getSecondAnswer());
+        }
+        if(item.getThirdAnswer().equals("**empty**")){
+            thirdAnswerTextArea.setText("");
+        }else{
+            thirdAnswerTextArea.setText(item.getThirdAnswer());
+        }
+        if(item.getFourthAnswer().equals("**empty**")){
+            fourthAnswerTextArea.setText("");
+        }else{
+            fourthAnswerTextArea.setText(item.getFourthAnswer());
+        }
         correctAnswerTextArea.setText(item.getCorrectAnswer());
+
         firstAnswerTextArea.setEditable(false);
         secondAnswerTextArea.setEditable(false);
         thirdAnswerTextArea.setEditable(false);
         fourthAnswerTextArea.setEditable(false);
         correctAnswerTextArea.setEditable(false);
     }
+
 
     public void setTextAreas(String string) {
         firstAnswerTextArea.setText(string);

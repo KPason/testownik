@@ -1,17 +1,15 @@
 package sample;
 
 import fx.mycontrols.TextFieldLimited;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -55,10 +53,8 @@ public class AddingQuestionsController {
         correctAnswer = dialogAddCorrectAnswerTextField.getText().trim();
 
         //check how many answers are empty and change the blanks to **empty**
-        int numberOfAnswers = checkHowManyAnswers();
-
-        Question newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer, numberOfAnswers);
-
+        int numberOfAnswers = checkHowManyAnswersAndSetInOrder();
+        Question newQuestion;
 
         if (numberOfAnswers < 2) {
             return showWarningAlert("Set the answers", "You passed " + numberOfAnswers + " answers", "Set at least 2 answers to continue");
@@ -66,11 +62,15 @@ public class AddingQuestionsController {
         } else if (question.isBlank()) {
             return showWarningAlert("Set the question text", "Question text field is empty", "Set a question text to continue");
 
+        } else if (isQuestionAlreadyInDataBase(question)) {
+            return showWarningAlert("Already in database", "Question you have passed is already in a database", "Make a new question");
+
         } else if (!correctAnswer.equals(firstAnswer) && !correctAnswer.equals(secondAnswer) && !correctAnswer.equals(thirdAnswer) &&
                 !correctAnswer.equals(fourthAnswer)) {
             return showWarningAlert("Set correct answer", "Correct answer does not match any of the answers", "Set correct answer");
 
         } else {
+            newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer, numberOfAnswers);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm adding");
             alert.setHeaderText("Are you sure that you want to add question: " + question);
@@ -87,32 +87,27 @@ public class AddingQuestionsController {
         return newQuestion;
     }
 
-    public int checkHowManyAnswers() {
-        int numberOfAnswers = 0;
-        String emptyString = "**empty**";
-        if (!firstAnswer.isBlank()) {
-            numberOfAnswers++;
-        }else{
-            firstAnswer = emptyString;
-        }
+    public int checkHowManyAnswersAndSetInOrder() {
+        int answersCounter = 0;
 
-        if (!secondAnswer.isBlank()) {
-            numberOfAnswers++;
-        }else{
-            secondAnswer = emptyString;
+        //checking how many answers and taking care of empty, not in order user's inputs
+        String[] answers = {firstAnswer, secondAnswer, thirdAnswer, fourthAnswer};
+        ArrayList<String> newAnswers = new ArrayList<>(4);
+        for (String answer : answers) {
+            if (!answer.isBlank()) {
+                answersCounter++;
+                newAnswers.add(answer);
+            }
         }
-
-        if (!thirdAnswer.isBlank()) {
-            numberOfAnswers++;
-        }else{
-            thirdAnswer = emptyString;
+        for (int i = 0; i < (4 - answersCounter); i++) {
+            newAnswers.add("**empty**");
         }
-        if (!fourthAnswer.isBlank()) {
-            numberOfAnswers++;
-        }else{
-            fourthAnswer = emptyString;
-        }
-        return numberOfAnswers;
+        System.out.println("New answers array: " + newAnswers.toString());
+        firstAnswer = newAnswers.get(0);
+        secondAnswer = newAnswers.get(1);
+        thirdAnswer = newAnswers.get(2);
+        fourthAnswer = newAnswers.get(3);
+        return answersCounter;
     }
 
 
@@ -133,6 +128,15 @@ public class AddingQuestionsController {
         dialogAddThirdAnswerTextField.setMaxLength(30);
         dialogAddFourthAnswerTextField.setMaxLength(30);
         dialogAddCorrectAnswerTextField.setMaxLength(30);
+    }
+
+    public boolean isQuestionAlreadyInDataBase(String question) {
+        for (Question checkedQuestion : QuestionsDataBase.getInstance().getQuestionsList()) {
+            if (question.equals(checkedQuestion.getQuestion())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
