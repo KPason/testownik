@@ -80,6 +80,8 @@ public class MainController {
         nextQuestionButton.setDisable(true);
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
+        
+        //wyswietlic jakis komunikat ze nie ma pytan w bazie czy coś
         if (startedQuestionsList.size() == 0) {
             System.out.println("Questions base is empty do sthg about it");
         }
@@ -96,13 +98,8 @@ public class MainController {
         } catch (IOException e) {
             e.getMessage();
         }
-        questionsCounter = 0;
-        correctAnswersCounter = 0;
-        QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
-        savedWrongQuestions.clear();
-        actualWrongQuestion = null;
-        wrongQuestionIndex = 0;
-        isQuestionAnswered = false;
+
+        resettingMainVariables();
         disableAndDismissingTheButtons(false, false);
         nextQuestionButton.setDisable(true);
 
@@ -218,6 +215,8 @@ public class MainController {
 
         answerToggleGroup.selectToggle(null);
         disableRadioButtons(false);
+
+
         // loading NEXT question if there is any
         if (questionsCounter < list.size()) {
             firstQuestionButton.setText(list.get(questionsCounter).getFirstAnswer());
@@ -229,7 +228,7 @@ public class MainController {
             nextQuestionButton.setDisable(true);
             // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
             lastQuestion = list.get(questionsCounter).getQuestion();
-
+            omitEmptyAnswers();
 
             // loading WRONG question if there is any
         } else if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0 || !(savedWrongQuestions.isEmpty())) {
@@ -257,6 +256,7 @@ public class MainController {
             thirdQuestionButton.setText(actualWrongQuestion.getThirdAnswer());
             fourthQuestionButton.setText(actualWrongQuestion.getFourthAnswer());
             questionLabel.setText(actualWrongQuestion.getQuestion());
+            omitEmptyAnswers();
             checkingButton.setDisable(false);
             nextQuestionButton.setDisable(true);
 
@@ -331,8 +331,30 @@ public class MainController {
         alert.showAndWait();
     }
 
+    public void omitEmptyAnswers() {
+        //validated to always have at least 2 first answered not blank
+        changeEmptyRadioButton(thirdQuestionButton);
+        changeEmptyRadioButton(fourthQuestionButton);
+    }
+
+    public void changeEmptyRadioButton(RadioButton radioButton) {
+        if (radioButton.getText().equals("**empty**")) {
+            radioButton.setVisible(false);
+        }
+    }
+
     private boolean gameIsStarted() {
         return menuStartButton.isDisable();
+    }
+
+    public void resettingMainVariables() {
+        questionsCounter = 0;
+        correctAnswersCounter = 0;
+        QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
+        savedWrongQuestions.clear();
+        actualWrongQuestion = null;
+        wrongQuestionIndex = 0;
+        isQuestionAnswered = false;
     }
 
 }

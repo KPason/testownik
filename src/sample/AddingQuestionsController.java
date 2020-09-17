@@ -2,9 +2,7 @@ package sample;
 
 import fx.mycontrols.TextFieldLimited;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
@@ -27,6 +25,20 @@ public class AddingQuestionsController {
     private TextFieldLimited dialogAddFourthAnswerTextField;
     @FXML
     private TextFieldLimited dialogAddCorrectAnswerTextField;
+    @FXML
+    private Label questionCharactersLimit;
+    @FXML
+    private Label firstAnswerCharactersLimit;
+    @FXML
+    private Label secondAnswerCharactersLimit;
+    @FXML
+    private Label thirdAnswerCharactersLimit;
+    @FXML
+    private Label fourthAnswerCharactersLimit;
+    @FXML
+    private Label correctAnswerCharactersLimit;
+
+
 
     private String question;
     private String firstAnswer;
@@ -37,13 +49,12 @@ public class AddingQuestionsController {
 
 
     public void initialize() {
-
+        limitAllTextFieldsLength();
+        showCharactersLimitForEveryTextField();
     }
 
-    //*********************WILL NEED TO ADD CORRECT ANSWERS COUNTER WHEN IMPLEMENTED PROBABLY ************************
-    public Question processResults() throws IOException {
 
-        limitAllTextFieldsLength();
+    public Question processResults() throws IOException {
 
         question = dialogAddQuestionTextField.getText().trim();
         firstAnswer = dialogAddFirstAnswerTextField.getText().trim();
@@ -102,7 +113,6 @@ public class AddingQuestionsController {
         for (int i = 0; i < (4 - answersCounter); i++) {
             newAnswers.add("**empty**");
         }
-        System.out.println("New answers array: " + newAnswers.toString());
         firstAnswer = newAnswers.get(0);
         secondAnswer = newAnswers.get(1);
         thirdAnswer = newAnswers.get(2);
@@ -120,6 +130,14 @@ public class AddingQuestionsController {
         return null;
     }
 
+    public boolean isQuestionAlreadyInDataBase(String question) {
+        for (Question checkedQuestion : QuestionsDataBase.getInstance().getQuestionsList()) {
+            if (question.equals(checkedQuestion.getQuestion())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void limitAllTextFieldsLength() {
         dialogAddQuestionTextField.setMaxLength(50);
@@ -130,14 +148,24 @@ public class AddingQuestionsController {
         dialogAddCorrectAnswerTextField.setMaxLength(30);
     }
 
-    public boolean isQuestionAlreadyInDataBase(String question) {
-        for (Question checkedQuestion : QuestionsDataBase.getInstance().getQuestionsList()) {
-            if (question.equals(checkedQuestion.getQuestion())) {
-                return true;
-            }
-        }
-        return false;
+    public void showCharactersLimitForOneTextField(TextField textField, Label labelAbove){
+        textField.setOnMouseEntered(event -> labelAbove.setVisible(true));
+        textField.setOnMouseExited(event -> labelAbove.setVisible(false));
     }
 
+    public void showCharactersLimitForEveryTextField(){
+        firstAnswerCharactersLimit.setText("characters limit: " + dialogAddFirstAnswerTextField.getMaxLength());
+        secondAnswerCharactersLimit.setText("characters limit: " + dialogAddSecondAnswerTextField.getMaxLength());
+        thirdAnswerCharactersLimit.setText("characters limit: " + dialogAddThirdAnswerTextField.getMaxLength());
+        fourthAnswerCharactersLimit.setText("characters limit: " + dialogAddFourthAnswerTextField.getMaxLength());
+        correctAnswerCharactersLimit.setText("characters limit: " + dialogAddCorrectAnswerTextField.getMaxLength());
+        questionCharactersLimit.setText("characters limit: " + dialogAddQuestionTextField.getMaxLength());
+        showCharactersLimitForOneTextField(dialogAddFirstAnswerTextField ,firstAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddSecondAnswerTextField ,secondAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddThirdAnswerTextField ,thirdAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddFourthAnswerTextField ,fourthAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddQuestionTextField, questionCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddCorrectAnswerTextField ,correctAnswerCharactersLimit);
+    }
 
 }

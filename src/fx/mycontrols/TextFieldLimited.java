@@ -10,11 +10,13 @@ public class TextFieldLimited extends TextField {
         this.maxLength = 100;
     }
 
+    public int getMaxLength() {
+        return maxLength;
+    }
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
-
 
     @Override
     public void replaceText(int start, int end, String text) {
