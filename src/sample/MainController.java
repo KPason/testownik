@@ -58,6 +58,8 @@ public class MainController {
 
     private String lastQuestion;
 
+    Question actualQuestion;
+
 
     public void initialize() {
         disableAndDismissingTheButtons("WELCOME TO THE GAME", true, true);
@@ -80,7 +82,7 @@ public class MainController {
         nextQuestionButton.setDisable(true);
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
-        
+
         //wyswietlic jakis komunikat ze nie ma pytan w bazie czy coś
         if (startedQuestionsList.size() == 0) {
             System.out.println("Questions base is empty do sthg about it");
@@ -178,8 +180,8 @@ public class MainController {
         } else {
 
             //adding failed question to wrong questions' list
-            if (QuestionsDataBase.getInstance().getQuestionsList().size() > questionsCounter) {
-                QuestionsDataBase.getInstance().addWrongQuestion(startedQuestionsList.get(questionsCounter));
+            if (startedQuestionsList.size() > 0) {
+                QuestionsDataBase.getInstance().addWrongQuestion(actualQuestion);
             }
             settingSceneAfterTheAnswer("red", "Wrong answer");
         }
@@ -205,29 +207,33 @@ public class MainController {
         if (isQuestionAnswered) {
             checkingButton.setTextFill(Paint.valueOf("black"));
             resultLabel.setText("");
+            startedQuestionsList.remove(actualQuestion);
             loadNextQuestion(startedQuestionsList);
             isQuestionAnswered = false;
         }
 
     }
 
+
+    // popatrzec czy nie mozna tegos jakos ladniej napisac
     public void loadNextQuestion(List<Question> list) {
 
         answerToggleGroup.selectToggle(null);
         disableRadioButtons(false);
 
 
-        // loading NEXT question if there is any
-        if (questionsCounter < list.size()) {
-            firstQuestionButton.setText(list.get(questionsCounter).getFirstAnswer());
-            secondQuestionButton.setText(list.get(questionsCounter).getSecondAnswer());
-            thirdQuestionButton.setText(list.get(questionsCounter).getThirdAnswer());
-            fourthQuestionButton.setText(list.get(questionsCounter).getFourthAnswer());
-            questionLabel.setText(list.get(questionsCounter).getQuestion());
+        if (list.size()>0) {
+            actualQuestion = getRandomElement(list);
+            firstQuestionButton.setText(actualQuestion.getFirstAnswer());
+            secondQuestionButton.setText(actualQuestion.getSecondAnswer());
+            thirdQuestionButton.setText(actualQuestion.getThirdAnswer());
+            fourthQuestionButton.setText(actualQuestion.getFourthAnswer());
+            questionLabel.setText(actualQuestion.getQuestion());
             checkingButton.setDisable(false);
             nextQuestionButton.setDisable(true);
+
             // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
-            lastQuestion = list.get(questionsCounter).getQuestion();
+            lastQuestion = actualQuestion.getQuestion();
             omitEmptyAnswers();
 
             // loading WRONG question if there is any
@@ -269,9 +275,9 @@ public class MainController {
     public boolean isCorrectAnswerChose() {
 
         //checking correct answers before ending the basic set
-        if (answerToggleGroup.selectedToggleProperty() != null && questionsCounter < startedQuestionsList.size()) {
+        if (answerToggleGroup.selectedToggleProperty() != null && 0 < startedQuestionsList.size()) {
             String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
-            String correctAnswer = startedQuestionsList.get(questionsCounter).getCorrectAnswer();
+            String correctAnswer = actualQuestion.getCorrectAnswer();
             return buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
                     .equals(correctAnswer);
 
@@ -355,6 +361,11 @@ public class MainController {
         actualWrongQuestion = null;
         wrongQuestionIndex = 0;
         isQuestionAnswered = false;
+    }
+
+    public Question getRandomElement(List<Question> list) {
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
     }
 
 }
