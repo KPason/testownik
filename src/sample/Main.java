@@ -11,8 +11,11 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private Stage window;
+    private static Stage window;
 
+    public static Stage getWindow() {
+        return window;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,5 +57,5 @@ public class Main extends Application {
 
 
             super.stop();
-        }
     }
+}

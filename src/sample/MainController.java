@@ -2,22 +2,17 @@ package sample;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Parent;
-import javafx.scene.chart.PieChart;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
@@ -81,7 +76,7 @@ public class MainController {
     }
 
     @FXML
-    public void startTheGame() {
+    public void startTheGame() throws IOException {
         try {
             startedQuestionsList = new ArrayList<>();
             QuestionsDataBase.getInstance().loadQuestions();
@@ -105,7 +100,9 @@ public class MainController {
     }
 
     @FXML
-    public void restartTheGame() {
+    public void restartTheGame() throws IOException {
+        System.out.println("restarting the game");
+
 
         //resetting all main variables
         try {
@@ -160,7 +157,7 @@ public class MainController {
     }
 
 
-    public void goToTheNextQuestion() {
+    public void goToTheNextQuestion() throws IOException {
         if (isQuestionAnswered) {
             checkingButton.setTextFill(Paint.valueOf("black"));
             resultLabel.setText("");
@@ -171,7 +168,7 @@ public class MainController {
 
     }
 
-    public void loadNextQuestion(List<Question> list) {
+    public void loadNextQuestion(List<Question> list) throws IOException {
 
         answerToggleGroup.selectToggle(null);
         disableRadioButtons(false);
@@ -296,7 +293,8 @@ public class MainController {
         }
     }
 
-    public void showScore(){
+    public void showScore() throws IOException {
+
         double accuracyRatio = ((double)correctAnswersCounter/attemptsCounter)*100;
         Label title = new Label("YOUR RESULTS");
         Label first = new Label("TOTAL NUMBER OF QUESTIONS: " + correctAnswersTotalNumber);
@@ -304,17 +302,21 @@ public class MainController {
         Label third = new Label("WRONG ANSWERS: " + (attemptsCounter - correctAnswersCounter));
         Label fourth = new Label("ACCURACY RATIO: " + (new DecimalFormat("#.##").format(accuracyRatio)) + " %");
         Label fifth = new Label(setAccuracyResultText(accuracyRatio));
+        VBox resultsBox = new VBox();
+        HBox buttonsBox = new HBox();
         Button restart = new Button("RESTART");
-        restart.setOnMouseClicked(e -> restartTheGame());
+        Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
+        restart.setOnMouseClicked(e -> Main.getWindow().setScene(new Scene(mainSceneRoot,800,500)));
+        
         Button exit = new Button("EXIT");
         exit.setOnMouseClicked(e -> Platform.exit());
 
-        VBox resultsBox = new VBox();
-        HBox buttonsBox = new HBox();
+
         buttonsBox.getChildren().addAll(restart,exit);
         resultsBox.getChildren().addAll(title,first,second,third,fourth,fifth,buttonsBox);
 
         mainWindowBorderPane.setCenter(resultsBox);
+
         resultsBox.alignmentProperty().setValue(Pos.CENTER);
         resultsBox.setSpacing(5);
         buttonsBox.alignmentProperty().setValue(Pos.CENTER);
@@ -327,6 +329,8 @@ public class MainController {
         fade.play();
 
     }
+
+
 
     public String setAccuracyResultText(double accuracyValue){
         if(accuracyValue == 100.00){
