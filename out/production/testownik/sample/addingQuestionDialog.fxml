@@ -27,11 +27,7 @@
                     <Font size="9"/>
                 </font>
             </Label>
-            <Label text="Question:" GridPane.rowIndex="1" GridPane.columnIndex="0" >
-                <font>
-                    <Font size="9"/>
-                </font>
-            </Label>
+            <Label text="Question:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
             <TextFieldLimited fx:id="dialogAddQuestionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
             <Label fx:id="firstAnswerCharactersLimit" visible="false" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.columnIndex="1">

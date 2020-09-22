@@ -41,15 +41,15 @@ public class MainController {
     private MenuItem menuStartButton;
     @FXML
     private MenuItem menuRestartButton;
+    @FXML
+    private Label answeredQuestionsCounterLabel;
 
 
     private ArrayList<Question> startedQuestionsList;
     private int questionsCounter = 0;
     private int correctAnswersTotalNumber = 0;
     private int correctAnswersCounter = 0;
-
     private int wrongQuestionIndex = 0;
-
     private boolean isQuestionAnswered = false;
 
     private ArrayList<Question> savedWrongQuestions = new ArrayList<>();
@@ -58,7 +58,7 @@ public class MainController {
 
     private String lastQuestion;
 
-    Question actualQuestion;
+    private Question actualQuestion;
 
 
     public void initialize() {
@@ -75,10 +75,10 @@ public class MainController {
         } catch (IOException e) {
             System.out.println("Couldn't load the questions");
         }
-
-        disableAndDismissingTheButtons(false, false);
-        loadNextQuestion(startedQuestionsList);
         correctAnswersTotalNumber = startedQuestionsList.size();
+        disableAndDismissingTheButtons(false, false);
+        setAnsweredQuestionsCounterLabel();
+        loadNextQuestion(startedQuestionsList);
         nextQuestionButton.setDisable(true);
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
@@ -193,6 +193,7 @@ public class MainController {
         resultLabel.setText(labelText);
         resultLabel.setTextFill(Paint.valueOf(textColour));
         checkingButton.setTextFill(Paint.valueOf(textColour));
+        setAnsweredQuestionsCounterLabel();
         questionsCounter++;
 
         // making question answered and disabling buttons
@@ -222,7 +223,7 @@ public class MainController {
         disableRadioButtons(false);
 
 
-        if (list.size()>0) {
+        if (list.size() > 0) {
             actualQuestion = getRandomElement(list);
             firstQuestionButton.setText(actualQuestion.getFirstAnswer());
             secondQuestionButton.setText(actualQuestion.getSecondAnswer());
@@ -298,6 +299,10 @@ public class MainController {
 
         } else return false;
 
+    }
+
+    public void setAnsweredQuestionsCounterLabel() {
+        answeredQuestionsCounterLabel.setText(correctAnswersCounter + "/" + correctAnswersTotalNumber);
     }
 
 
