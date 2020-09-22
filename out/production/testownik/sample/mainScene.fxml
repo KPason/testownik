@@ -92,7 +92,6 @@
                 <Label fx:id="answeredQuestionsCounterLabel" alignment="BOTTOM_LEFT">
                     <padding>
                         <Insets bottom="20" left="30"/>
-
                     </padding>
                     <font>
                         <Font size="10"/>

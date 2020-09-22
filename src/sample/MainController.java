@@ -1,15 +1,29 @@
 package sample;
 
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import sample.questionsDataBase.Question;
 import sample.questionsDataBase.QuestionsDataBase;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +60,7 @@ public class MainController {
 
 
     private ArrayList<Question> startedQuestionsList;
-    private int questionsCounter = 0;
+    private int attemptsCounter = 0;
     private int correctAnswersTotalNumber = 0;
     private int correctAnswersCounter = 0;
     private int wrongQuestionIndex = 0;
@@ -93,7 +107,6 @@ public class MainController {
     @FXML
     public void restartTheGame() {
 
-
         //resetting all main variables
         try {
             QuestionsDataBase.getInstance().saveQuestions();
@@ -109,6 +122,123 @@ public class MainController {
 
     }
 
+    public void checkingTheAnswer() {
+
+        if (!firstQuestionButton.isSelected() && !secondQuestionButton.isSelected() && !thirdQuestionButton.isSelected()
+                && !fourthQuestionButton.isSelected()) {
+            resultLabel.setText("CHOOSE AN ANSWER");
+
+        } else if (isCorrectAnswerChose()) {
+
+            //incrementing good questions counter
+            correctAnswersCounter++;
+            settingSceneAfterTheAnswer("green", "Correct answer");
+        } else {
+
+            //adding failed question to wrong questions' list
+            if (startedQuestionsList.size() > 0) {
+                QuestionsDataBase.getInstance().addWrongQuestion(actualQuestion);
+            }
+            settingSceneAfterTheAnswer("red", "Wrong answer");
+        }
+
+
+    }
+
+    public void settingSceneAfterTheAnswer(String textColour, String labelText) {
+        resultLabel.setText(labelText);
+        resultLabel.setTextFill(Paint.valueOf(textColour));
+        checkingButton.setTextFill(Paint.valueOf(textColour));
+        setAnsweredQuestionsCounterLabel();
+        attemptsCounter++;
+
+        // making question answered and disabling buttons
+        isQuestionAnswered = true;
+        disableRadioButtons(true);
+        nextQuestionButton.setDisable(false);
+        checkingButton.setDisable(true);
+    }
+
+
+    public void goToTheNextQuestion() {
+        if (isQuestionAnswered) {
+            checkingButton.setTextFill(Paint.valueOf("black"));
+            resultLabel.setText("");
+            startedQuestionsList.remove(actualQuestion);
+            loadNextQuestion(startedQuestionsList);
+            isQuestionAnswered = false;
+        }
+
+    }
+
+    public void loadNextQuestion(List<Question> list) {
+
+        answerToggleGroup.selectToggle(null);
+        disableRadioButtons(false);
+        ArrayList<Question> wrongQuestionsList = QuestionsDataBase.getInstance().getWrongQuestionsList();
+
+
+        if (list.size() > 0) {
+            actualQuestion = getRandomElement(list);
+            setRadioButtonsTextAndSetRestOfButtons(actualQuestion);
+
+            // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
+            lastQuestion = actualQuestion.getQuestion();
+            omitEmptyAnswers();
+
+            // loading WRONG question if there is any
+        } else if (wrongQuestionsList.size() > 0 || !(savedWrongQuestions.isEmpty())) {
+
+            //saving renewed wrongly answered questions to main wrong questions list
+            if (wrongQuestionsList.size() == 0) {
+                wrongQuestionsList.addAll(savedWrongQuestions);
+                savedWrongQuestions.clear();
+            }
+            actualWrongQuestion = getRandomElement(wrongQuestionsList);
+
+            // checking last displayed question to avoid repeating the same one
+            while (lastQuestion.equals(actualWrongQuestion.getQuestion()) && wrongQuestionsList.size() > 1) {
+                actualWrongQuestion = getRandomElement(wrongQuestionsList);
+            }
+
+            lastQuestion = actualWrongQuestion.getQuestion();
+            setRadioButtonsTextAndSetRestOfButtons(actualWrongQuestion);
+            omitEmptyAnswers();
+
+        }else{
+            disableAndDismissingTheButtons("",true,true);
+            answeredQuestionsCounterLabel.setVisible(false);
+            showScore();
+        }
+    }
+
+    public boolean isCorrectAnswerChose() {
+
+        //checking correct answers before ending the basic set
+        if (answerToggleGroup.selectedToggleProperty() != null && 0 < startedQuestionsList.size()) {
+            String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
+            String correctAnswer = actualQuestion.getCorrectAnswer();
+            return buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
+                    .equals(correctAnswer);
+
+            //checking correct answers when wrong questions load
+        } else if (answerToggleGroup.selectedToggleProperty() != null && QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0) {
+            String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
+            String correctAnswer = QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getCorrectAnswer();
+
+            if (buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
+                    .equals(correctAnswer)) {
+                QuestionsDataBase.getInstance().getWrongQuestionsList().remove(wrongQuestionIndex);
+                return true;
+            } else {
+                savedWrongQuestions.add(actualWrongQuestion);
+                QuestionsDataBase.getInstance().getWrongQuestionsList().remove(wrongQuestionIndex);
+                return false;
+            }
+
+        } else return false;
+
+    }
 
     public void showEditingQuestionsDialog() throws IOException {
 
@@ -166,142 +296,64 @@ public class MainController {
         }
     }
 
-    public void checkingTheAnswer() {
+    public void showScore(){
+        double accuracyRatio = ((double)correctAnswersCounter/attemptsCounter)*100;
+        Label title = new Label("YOUR RESULTS");
+        Label first = new Label("TOTAL NUMBER OF QUESTIONS: " + correctAnswersTotalNumber);
+        Label second = new Label("GOOD ANSWERS: " + correctAnswersCounter);
+        Label third = new Label("WRONG ANSWERS: " + (attemptsCounter - correctAnswersCounter));
+        Label fourth = new Label("ACCURACY RATIO: " + (new DecimalFormat("#.##").format(accuracyRatio)) + " %");
+        Label fifth = new Label(setAccuracyResultText(accuracyRatio));
+        Button restart = new Button("RESTART");
+        restart.setOnMouseClicked(e -> restartTheGame());
+        Button exit = new Button("EXIT");
+        exit.setOnMouseClicked(e -> Platform.exit());
 
-        if (!firstQuestionButton.isSelected() && !secondQuestionButton.isSelected() && !thirdQuestionButton.isSelected()
-                && !fourthQuestionButton.isSelected()) {
-            resultLabel.setText("CHOOSE AN ANSWER");
+        VBox resultsBox = new VBox();
+        HBox buttonsBox = new HBox();
+        buttonsBox.getChildren().addAll(restart,exit);
+        resultsBox.getChildren().addAll(title,first,second,third,fourth,fifth,buttonsBox);
 
-        } else if (isCorrectAnswerChose()) {
+        mainWindowBorderPane.setCenter(resultsBox);
+        resultsBox.alignmentProperty().setValue(Pos.CENTER);
+        resultsBox.setSpacing(5);
+        buttonsBox.alignmentProperty().setValue(Pos.CENTER);
+        buttonsBox.setSpacing(20);
+        buttonsBox.setPadding(new Insets(20,0,0,0));
 
-            //incrementing good questions counter
-            correctAnswersCounter++;
-            settingSceneAfterTheAnswer("green", "Correct answer");
-        } else {
-
-            //adding failed question to wrong questions' list
-            if (startedQuestionsList.size() > 0) {
-                QuestionsDataBase.getInstance().addWrongQuestion(actualQuestion);
-            }
-            settingSceneAfterTheAnswer("red", "Wrong answer");
-        }
-
-
-    }
-
-    public void settingSceneAfterTheAnswer(String textColour, String labelText) {
-        resultLabel.setText(labelText);
-        resultLabel.setTextFill(Paint.valueOf(textColour));
-        checkingButton.setTextFill(Paint.valueOf(textColour));
-        setAnsweredQuestionsCounterLabel();
-        questionsCounter++;
-
-        // making question answered and disabling buttons
-        isQuestionAnswered = true;
-        disableRadioButtons(true);
-        nextQuestionButton.setDisable(false);
-        checkingButton.setDisable(true);
-    }
-
-
-    public void goToTheNextQuestion() {
-        if (isQuestionAnswered) {
-            checkingButton.setTextFill(Paint.valueOf("black"));
-            resultLabel.setText("");
-            startedQuestionsList.remove(actualQuestion);
-            loadNextQuestion(startedQuestionsList);
-            isQuestionAnswered = false;
-        }
+        FadeTransition fade = new FadeTransition(Duration.seconds(5),resultsBox);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.play();
 
     }
 
-
-    // popatrzec czy nie mozna tegos jakos ladniej napisac
-    public void loadNextQuestion(List<Question> list) {
-
-        answerToggleGroup.selectToggle(null);
-        disableRadioButtons(false);
-
-
-        if (list.size() > 0) {
-            actualQuestion = getRandomElement(list);
-            firstQuestionButton.setText(actualQuestion.getFirstAnswer());
-            secondQuestionButton.setText(actualQuestion.getSecondAnswer());
-            thirdQuestionButton.setText(actualQuestion.getThirdAnswer());
-            fourthQuestionButton.setText(actualQuestion.getFourthAnswer());
-            questionLabel.setText(actualQuestion.getQuestion());
-            checkingButton.setDisable(false);
-            nextQuestionButton.setDisable(true);
-
-            // saving last question to not repeat the last one when redoing wrongly answered questions in the quiz
-            lastQuestion = actualQuestion.getQuestion();
-            omitEmptyAnswers();
-
-            // loading WRONG question if there is any
-        } else if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0 || !(savedWrongQuestions.isEmpty())) {
-
-            //saving renewed wrongly answered questions to main wrong questions list
-            if (QuestionsDataBase.getInstance().getWrongQuestionsList().size() == 0) {
-                QuestionsDataBase.getInstance().getWrongQuestionsList().addAll(savedWrongQuestions);
-                savedWrongQuestions.clear();
-            }
-
-            Random random = new Random();
-            wrongQuestionIndex = random.nextInt(QuestionsDataBase.getInstance().getWrongQuestionsList().size());
-
-            // checking last displayed question to avoid repeating the same one
-            while (lastQuestion.equals(QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getQuestion())
-                    && QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 1) {
-                wrongQuestionIndex = random.nextInt(QuestionsDataBase.getInstance().getWrongQuestionsList().size());
-            }
-            actualWrongQuestion = QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex);
-            lastQuestion = actualWrongQuestion.getQuestion();
-
-
-            firstQuestionButton.setText(actualWrongQuestion.getFirstAnswer());
-            secondQuestionButton.setText(actualWrongQuestion.getSecondAnswer());
-            thirdQuestionButton.setText(actualWrongQuestion.getThirdAnswer());
-            fourthQuestionButton.setText(actualWrongQuestion.getFourthAnswer());
-            questionLabel.setText(actualWrongQuestion.getQuestion());
-            omitEmptyAnswers();
-            checkingButton.setDisable(false);
-            nextQuestionButton.setDisable(true);
-
-        } else {
-            // disabling buttons after all questions
-            disableAndDismissingTheButtons("", true, true);
+    public String setAccuracyResultText(double accuracyValue){
+        if(accuracyValue == 100.00){
+            return "YOU MADE NO MISTAKES, GOOD JOB!";
+        }else if(accuracyValue>80.00){
+            return "YOU DID ALMOST PERFECT, NICE!";
+        }else if(accuracyValue>50.00){
+            return "YOU KNOW A LOT, BUT THERE IS STILL MUCH TO LEARN";
+        }else if(accuracyValue>0.00){
+            return "YOU HAVE A LOT TO LEARN";
+        }else{
+            return "Oh dude, we have a problem here";
         }
     }
 
-    public boolean isCorrectAnswerChose() {
-
-        //checking correct answers before ending the basic set
-        if (answerToggleGroup.selectedToggleProperty() != null && 0 < startedQuestionsList.size()) {
-            String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
-            String correctAnswer = actualQuestion.getCorrectAnswer();
-            return buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
-                    .equals(correctAnswer);
-
-            //checking correct answers when wrong questions load
-        } else if (answerToggleGroup.selectedToggleProperty() != null && QuestionsDataBase.getInstance().getWrongQuestionsList().size() > 0) {
-            String buttonValue = answerToggleGroup.selectedToggleProperty().getValue().toString();
-            String correctAnswer = QuestionsDataBase.getInstance().getWrongQuestionsList().get(wrongQuestionIndex).getCorrectAnswer();
-
-            if (buttonValue.substring(buttonValue.length() - (correctAnswer.length() + 1), buttonValue.length() - 1)
-                    .equals(correctAnswer)) {
-                QuestionsDataBase.getInstance().getWrongQuestionsList().remove(wrongQuestionIndex);
-                return true;
-            } else {
-                savedWrongQuestions.add(actualWrongQuestion);
-                QuestionsDataBase.getInstance().getWrongQuestionsList().remove(wrongQuestionIndex);
-                return false;
-            }
-
-        } else return false;
-
+    public void setRadioButtonsTextAndSetRestOfButtons(Question question){
+        firstQuestionButton.setText(question.getFirstAnswer());
+        secondQuestionButton.setText(question.getSecondAnswer());
+        thirdQuestionButton.setText(question.getThirdAnswer());
+        fourthQuestionButton.setText(question.getFourthAnswer());
+        questionLabel.setText(question.getQuestion());
+        checkingButton.setDisable(false);
+        nextQuestionButton.setDisable(true);
     }
 
     public void setAnsweredQuestionsCounterLabel() {
+        answeredQuestionsCounterLabel.setVisible(true);
         answeredQuestionsCounterLabel.setText(correctAnswersCounter + "/" + correctAnswersTotalNumber);
     }
 
@@ -359,7 +411,7 @@ public class MainController {
     }
 
     public void resettingMainVariables() {
-        questionsCounter = 0;
+        attemptsCounter = 0;
         correctAnswersCounter = 0;
         QuestionsDataBase.getInstance().getWrongQuestionsList().clear();
         savedWrongQuestions.clear();
