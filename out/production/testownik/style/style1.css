@@ -1,0 +1,48 @@
+
+
+    *   {
+        -fx-primary: #2A2E37;
+        -fx-secondary: #FFFF8D;
+        -fx-primaryText: #B2B2B2;
+    }
+
+    .root{
+        -fx-background-color: -fx-primary;
+    }
+
+    .button{
+
+    }
+
+    .question-label{
+        -fx-text-fill: -fx-primaryText;
+    }
+
+    .next-buttons{
+        -fx-border-color: -fx-secondary;
+        -fx-border-radius: 20px;
+        -fx-background-radius: 20px;
+        -fx-background-color: -fx-primary;
+        -fx-text-fill: -fx-primaryText;
+    }
+
+    .next-buttons:hover{
+        -fx-border-color: -fx-secondary;
+        -fx-background-color: -fx-secondary;
+        -fx-text-fill: -fx-primary;
+    }
+
+    .radio-buttons{
+        -fx-text-fill: -fx-primaryText;
+    }
+
+    .radio-buttons .radio:hover {
+        -fx-background-color: -fx-secondary;
+        -fx-border-radius: 130px; 
+    }
+
+    .radio-buttons:selected .radio{
+        -fx-border-color: #FF0000;
+        -fx-border-radius: 130px;
+    }
+

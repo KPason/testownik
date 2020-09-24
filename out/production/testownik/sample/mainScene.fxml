@@ -1,25 +1,25 @@
-<?import javafx.geometry.Insets?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 
-
-<BorderPane fx:id="mainWindowBorderPane" fx:controller="sample.MainController"
-            xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: white">
+<BorderPane fx:id="mainWindowBorderPane" stylesheets="@../style/style1.css"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sample.MainController">
     <top>
         <MenuBar>
             <Menu fx:id="mainMenu" text="Game">
-                <items>
-                    <MenuItem fx:id="menuStartButton" text="Start" onAction="#startTheGame"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem fx:id="menuRestartButton" text="Restart" onAction="#restartTheGame"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Exit"/>
-                </items>
+                <MenuItem fx:id="menuStartButton" onAction="#startTheGame" text="Start"/>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="menuRestartButton" onAction="#restartTheGame" text="Restart"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit"/>
             </Menu>
 
             <Menu text="Questions">
-                <MenuItem text="Edit questions" onAction="#showEditingQuestionsDialog"/>
+                <MenuItem onAction="#showEditingQuestionsDialog" text="Edit questions"/>
             </Menu>
         </MenuBar>
     </top>
@@ -32,11 +32,10 @@
             <VBox alignment="TOP_CENTER" spacing=" 15">
 
                 <padding>
-                    <Insets top="10" bottom="10"/>
+                    <Insets bottom="10" top="10"/>
                 </padding>
 
-                <Label fx:id="questionLabel" alignment="CENTER" textAlignment="CENTER" wrapText="true"
-                       textFill="#663399" prefWidth="400">
+                <Label fx:id="questionLabel" alignment="CENTER" styleClass="question-label" prefWidth="400" textAlignment="CENTER" wrapText="true">
                     <font>
                         <Font name="Verdana" size="20"/>
                     </font>
@@ -51,25 +50,30 @@
 
             <VBox spacing="10">
 
-                <fx:define>
-                    <ToggleGroup fx:id="answerToggleGroup"/>
-                </fx:define>
+
                 <padding>
                     <Insets left="100"/>
                 </padding>
 
-                <RadioButton fx:id="firstQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
-                <RadioButton fx:id="secondQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
-                <RadioButton fx:id="thirdQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
-                <RadioButton fx:id="fourthQuestionButton" toggleGroup="$answerToggleGroup" wrapText="true"/>
+                <RadioButton fx:id="firstQuestionButton" styleClass="radio-buttons" wrapText="true">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="answerToggleGroup"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="secondQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
+                             wrapText="true"/>
+                <RadioButton fx:id="thirdQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
+                             wrapText="true"/>
+                <RadioButton fx:id="fourthQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
+                             wrapText="true"/>
             </VBox>
 
             <VBox alignment="BOTTOM_RIGHT">
                 <HBox alignment="CENTER_RIGHT">
-                    <Button fx:id="checkingButton" prefWidth="100" text="check answer"
-                            onMouseClicked="#checkingTheAnswer"/>
-                    <Button fx:id="nextQuestionButton" prefWidth="100" text="go to next"
-                            onMouseClicked="#goToTheNextQuestion"/>
+                    <Button fx:id="checkingButton" onMouseClicked="#checkingTheAnswer" prefWidth="100"
+                            styleClass="next-buttons" text="check answer"/>
+                    <Button fx:id="nextQuestionButton" onMouseClicked="#goToTheNextQuestion" prefWidth="100"
+                            styleClass="next-buttons" text="go to next"/>
                 </HBox>
             </VBox>
         </VBox>
@@ -79,7 +83,7 @@
         <VBox>
 
             <HBox alignment="CENTER">
-                <Label fx:id="resultLabel" textFill="#663399">
+                <Label fx:id="resultLabel">
                     <padding>
                         <Insets bottom="30"/>
                     </padding>
@@ -100,10 +104,8 @@
             </HBox>
         </VBox>
     </bottom>
-
     <left>
     </left>
-
     <right>
     </right>
 

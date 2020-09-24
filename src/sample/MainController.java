@@ -26,6 +26,7 @@ import java.util.Random;
 
 
 public class MainController {
+    public Menu mainMenu;
     @FXML
     private RadioButton firstQuestionButton;
     @FXML
@@ -308,7 +309,6 @@ public class MainController {
         Button exit = new Button("EXIT");
         exit.setOnMouseClicked(e -> Platform.exit());
 
-
         buttonsBox.getChildren().addAll(restart,exit);
         resultsBox.getChildren().addAll(title,first,second,third,fourth,fifth,buttonsBox);
 
@@ -332,9 +332,9 @@ public class MainController {
     public String setAccuracyResultText(double accuracyValue){
         if(accuracyValue == 100.00){
             return "YOU MADE NO MISTAKES, GOOD JOB!";
-        }else if(accuracyValue>80.00){
+        }else if(accuracyValue>=80.00){
             return "YOU DID ALMOST PERFECT, NICE!";
-        }else if(accuracyValue>50.00){
+        }else if(accuracyValue>=50.00){
             return "YOU KNOW A LOT, BUT THERE IS STILL MUCH TO LEARN";
         }else if(accuracyValue>0.00){
             return "YOU HAVE A LOT TO LEARN";
