@@ -40,7 +40,6 @@ public class AddingQuestionsController {
     private Label correctAnswerCharactersLimit;
 
 
-
     private String question;
     private String firstAnswer;
     private String secondAnswer;
@@ -81,6 +80,8 @@ public class AddingQuestionsController {
                 !correctAnswer.equals(fourthAnswer)) {
             return showWarningAlert("Set correct answer", "Correct answer does not match any of the answers", "Set correct answer");
 
+        } else if (answersRepeat()) {
+            return showWarningAlert("Answers are repeating", "Your answers shouldn't repeat","Make your answers unique");
         } else {
             newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer, numberOfAnswers);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -149,24 +150,36 @@ public class AddingQuestionsController {
         dialogAddCorrectAnswerTextField.setMaxLength(30);
     }
 
-    public void showCharactersLimitForOneTextField(TextField textField, Label labelAbove){
+    public void showCharactersLimitForOneTextField(TextField textField, Label labelAbove) {
         textField.setOnMouseEntered(event -> labelAbove.setVisible(true));
         textField.setOnMouseExited(event -> labelAbove.setVisible(false));
     }
 
-    public void showCharactersLimitForEveryTextField(){
+    public void showCharactersLimitForEveryTextField() {
         firstAnswerCharactersLimit.setText("characters limit: " + dialogAddFirstAnswerTextField.getMaxLength());
         secondAnswerCharactersLimit.setText("characters limit: " + dialogAddSecondAnswerTextField.getMaxLength());
         thirdAnswerCharactersLimit.setText("characters limit: " + dialogAddThirdAnswerTextField.getMaxLength());
         fourthAnswerCharactersLimit.setText("characters limit: " + dialogAddFourthAnswerTextField.getMaxLength());
         correctAnswerCharactersLimit.setText("characters limit: " + dialogAddCorrectAnswerTextField.getMaxLength());
         questionCharactersLimit.setText("characters limit: " + dialogAddQuestionTextField.getMaxLength());
-        showCharactersLimitForOneTextField(dialogAddFirstAnswerTextField ,firstAnswerCharactersLimit);
-        showCharactersLimitForOneTextField(dialogAddSecondAnswerTextField ,secondAnswerCharactersLimit);
-        showCharactersLimitForOneTextField(dialogAddThirdAnswerTextField ,thirdAnswerCharactersLimit);
-        showCharactersLimitForOneTextField(dialogAddFourthAnswerTextField ,fourthAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddFirstAnswerTextField, firstAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddSecondAnswerTextField, secondAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddThirdAnswerTextField, thirdAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddFourthAnswerTextField, fourthAnswerCharactersLimit);
         showCharactersLimitForOneTextField(dialogAddQuestionTextField, questionCharactersLimit);
-        showCharactersLimitForOneTextField(dialogAddCorrectAnswerTextField ,correctAnswerCharactersLimit);
+        showCharactersLimitForOneTextField(dialogAddCorrectAnswerTextField, correctAnswerCharactersLimit);
+    }
+
+    public boolean answersRepeat() {
+        if (firstAnswer.equals(secondAnswer) || firstAnswer.equals(thirdAnswer) || firstAnswer.equals(fourthAnswer)) {
+            return true;
+        } else if (secondAnswer.equals(thirdAnswer) || secondAnswer.equals(fourthAnswer)) {
+            return true;
+        } else if (thirdAnswer.equals(fourthAnswer)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

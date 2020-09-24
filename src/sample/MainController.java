@@ -92,11 +92,6 @@ public class MainController {
         menuRestartButton.setDisable(false);
         menuStartButton.setDisable(true);
 
-        //wyswietlic jakis komunikat ze nie ma pytan w bazie czy coś
-        if (startedQuestionsList.size() == 0) {
-            System.out.println("Questions base is empty do sthg about it");
-        }
-
     }
 
     @FXML
@@ -202,7 +197,9 @@ public class MainController {
             setRadioButtonsTextAndSetRestOfButtons(actualWrongQuestion);
             omitEmptyAnswers();
 
-        }else{
+        }else if(QuestionsDataBase.getInstance().getQuestionsList().size()==0 && attemptsCounter==0){
+            disableAndDismissingTheButtons("QUESTIONS' BASE IS EMPTY. ADD ANYTHING TO START",true,true);
+        } else{
             disableAndDismissingTheButtons("",true,true);
             answeredQuestionsCounterLabel.setVisible(false);
             showScore();
@@ -238,6 +235,7 @@ public class MainController {
     }
 
     public void showEditingQuestionsDialog() throws IOException {
+
 
         QuestionsDataBase.getInstance().loadQuestions();
 
@@ -307,7 +305,6 @@ public class MainController {
         Button restart = new Button("RESTART");
         Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
         restart.setOnMouseClicked(e -> Main.getWindow().setScene(new Scene(mainSceneRoot,800,500)));
-        
         Button exit = new Button("EXIT");
         exit.setOnMouseClicked(e -> Platform.exit());
 
@@ -378,8 +375,8 @@ public class MainController {
         checkingButton.setVisible(!dismissButtons);
     }
 
-    public void disableAndDismissingTheButtons(String questionAreaText, boolean disableButtons, boolean dismissButtons) {
-        questionLabel.setText(questionAreaText);
+    public void disableAndDismissingTheButtons(String questionLabel, boolean disableButtons, boolean dismissButtons) {
+        this.questionLabel.setText(questionLabel);
         disableRadioButtons(disableButtons);
         dismissButtons(dismissButtons);
     }

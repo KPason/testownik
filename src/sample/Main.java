@@ -37,6 +37,7 @@ public class Main extends Application {
     @Override
     public void init() {
         try {
+
             QuestionsDataBase.getInstance().loadQuestions();
 
         } catch (IOException e) {
@@ -49,7 +50,6 @@ public class Main extends Application {
 
             try {
                 QuestionsDataBase.getInstance().saveQuestions();
-                System.out.println("saving questions when closing");
 
             } catch (IOException e) {
                 System.out.println("Couldn't save the questions when closing the app");
