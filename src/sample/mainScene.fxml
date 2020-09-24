@@ -5,75 +5,71 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="mainWindowBorderPane" stylesheets="@../style/style1.css"
-            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="sample.MainController">
+<BorderPane fx:id="mainWindowBorderPane" prefHeight="500" prefWidth="600" stylesheets="@../style/style1.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainController">
     <top>
-        <MenuBar>
+        <MenuBar styleClass="menu">
             <Menu fx:id="mainMenu" text="Game">
-                <MenuItem fx:id="menuStartButton" onAction="#startTheGame" text="Start"/>
-                <SeparatorMenuItem/>
-                <MenuItem fx:id="menuRestartButton" onAction="#restartTheGame" text="Restart"/>
-                <SeparatorMenuItem/>
-                <MenuItem text="Exit"/>
+                <MenuItem fx:id="menuStartButton" onAction="#startTheGame" styleClass="menu-items" text="Start" />
+                <SeparatorMenuItem style="-fx-background-color: #2A2E37;" styleClass="menu" />
+                <MenuItem fx:id="menuRestartButton" onAction="#restartTheGame" styleClass="menu-items" text="Restart" />
+                <SeparatorMenuItem styleClass="menu" />
+                <MenuItem styleClass="menu-items" text="Exit" />
             </Menu>
 
-            <Menu text="Questions">
-                <MenuItem onAction="#showEditingQuestionsDialog" text="Edit questions"/>
+            <Menu fx:id= "questionsMenu" text="Questions">
+                <MenuItem onAction="#showEditingQuestionsDialog" styleClass="menu-items" text="Edit questions" />
             </Menu>
         </MenuBar>
     </top>
 
     <center>
-        <VBox spacing="40">
+        <VBox>
             <padding>
-                <Insets top="80"/>
+                <Insets top="30" />
             </padding>
-            <VBox alignment="TOP_CENTER" spacing=" 15">
+            <VBox alignment="TOP_CENTER">
 
                 <padding>
-                    <Insets bottom="10" top="10"/>
+                    <Insets bottom="20" />
                 </padding>
 
-                <Label fx:id="questionLabel" alignment="CENTER" styleClass="question-label" prefWidth="400" textAlignment="CENTER" wrapText="true">
+                <Label fx:id="questionLabel" alignment="CENTER" prefHeight="150" prefWidth="400" styleClass="question-label" textAlignment="CENTER" wrapText="true">
                     <font>
-                        <Font name="Verdana" size="20"/>
+                        <Font name="Verdana" size="15" />
                     </font>
                 </Label>
 
                 <fx:define>
-                    <ToggleGroup fx:id="questionsToggleGroup"/>
+                    <ToggleGroup fx:id="questionsToggleGroup" />
                 </fx:define>
 
             </VBox>
 
 
-            <VBox spacing="10">
+            <VBox prefHeight="200" spacing="5">
 
 
                 <padding>
-                    <Insets left="100"/>
+                    <Insets left="80" />
                 </padding>
 
-                <RadioButton fx:id="firstQuestionButton" styleClass="radio-buttons" wrapText="true">
+                <RadioButton fx:id="firstQuestionButton" prefWidth="450" styleClass="radio-buttons" wrapText="true">
                     <toggleGroup>
-                        <ToggleGroup fx:id="answerToggleGroup"/>
+                        <ToggleGroup fx:id="answerToggleGroup" />
                     </toggleGroup>
                 </RadioButton>
-                <RadioButton fx:id="secondQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
-                             wrapText="true"/>
-                <RadioButton fx:id="thirdQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
-                             wrapText="true"/>
-                <RadioButton fx:id="fourthQuestionButton" styleClass="radio-buttons" toggleGroup="$answerToggleGroup"
-                             wrapText="true"/>
+                <RadioButton fx:id="secondQuestionButton" prefWidth="450" styleClass="radio-buttons" toggleGroup="$answerToggleGroup" wrapText="true" />
+                <RadioButton fx:id="thirdQuestionButton" prefWidth="450" styleClass="radio-buttons" toggleGroup="$answerToggleGroup" wrapText="true" />
+                <RadioButton fx:id="fourthQuestionButton" prefWidth="450" styleClass="radio-buttons" toggleGroup="$answerToggleGroup" wrapText="true" />
             </VBox>
 
             <VBox alignment="BOTTOM_RIGHT">
+                <padding>
+                    <Insets top="30" />
+                </padding>
                 <HBox alignment="CENTER_RIGHT">
-                    <Button fx:id="checkingButton" onMouseClicked="#checkingTheAnswer" prefWidth="100"
-                            styleClass="next-buttons" text="check answer"/>
-                    <Button fx:id="nextQuestionButton" onMouseClicked="#goToTheNextQuestion" prefWidth="100"
-                            styleClass="next-buttons" text="go to next"/>
+                    <Button fx:id="checkingButton" onMouseClicked="#checkingTheAnswer" prefWidth="100" styleClass="next-buttons" text="check answer" />
+                    <Button fx:id="nextQuestionButton" onMouseClicked="#goToTheNextQuestion" prefWidth="100" styleClass="next-buttons" text="go to next" />
                 </HBox>
             </VBox>
         </VBox>
@@ -83,22 +79,22 @@
         <VBox>
 
             <HBox alignment="CENTER">
-                <Label fx:id="resultLabel">
+                <Label fx:id="resultLabel" styleClass="question-label">
                     <padding>
-                        <Insets bottom="30"/>
+                        <Insets bottom="15" />
                     </padding>
                     <font>
-                        <Font name="Verdana" size="30"/>
+                        <Font name="Verdana" size="20" />
                     </font>
                 </Label>
             </HBox>
             <HBox alignment="BOTTOM_LEFT">
-                <Label fx:id="answeredQuestionsCounterLabel" alignment="BOTTOM_LEFT">
+                <Label fx:id="answeredQuestionsCounterLabel" alignment="BOTTOM_LEFT" styleClass="question-label">
                     <padding>
-                        <Insets bottom="20" left="30"/>
+                        <Insets bottom="20" left="30" />
                     </padding>
                     <font>
-                        <Font size="10"/>
+                        <Font size="10" />
                     </font>
                 </Label>
             </HBox>

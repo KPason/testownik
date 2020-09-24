@@ -86,7 +86,11 @@ public class AddingQuestionsController {
             newQuestion = new Question(question, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, correctAnswer, numberOfAnswers);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm adding");
-            alert.setHeaderText("Are you sure that you want to add question: " + question);
+            if(question.length()>50){
+                alert.setHeaderText("Are you sure that you want to add question: \n" + question.substring(0,question.length()/2) + "\n" + question.substring(question.length()/2));
+            }else{
+                alert.setHeaderText("Are you sure that you want to add question: \n" + question);
+            }
             alert.setContentText("Press ok to confirm, or cancel to avoid");
 
             Optional<ButtonType> result = alert.showAndWait();
@@ -128,6 +132,9 @@ public class AddingQuestionsController {
         Alert alert = new Alert(Alert.AlertType.WARNING, contextText, confirmationButton);
         alert.setHeaderText(headerText);
         alert.setTitle(title);
+        DialogPane alertDialog = alert.getDialogPane();
+        alertDialog.getStylesheets().add(getClass().getResource("/style/style1.css").toExternalForm());
+        alertDialog.getStyleClass().add("alertDialog");
         alert.showAndWait();
         return null;
     }
@@ -142,12 +149,12 @@ public class AddingQuestionsController {
     }
 
     public void limitAllTextFieldsLength() {
-        dialogAddQuestionTextField.setMaxLength(50);
-        dialogAddFirstAnswerTextField.setMaxLength(30);
-        dialogAddSecondAnswerTextField.setMaxLength(30);
-        dialogAddThirdAnswerTextField.setMaxLength(30);
-        dialogAddFourthAnswerTextField.setMaxLength(30);
-        dialogAddCorrectAnswerTextField.setMaxLength(30);
+        dialogAddQuestionTextField.setMaxLength(250);
+        dialogAddFirstAnswerTextField.setMaxLength(130);
+        dialogAddSecondAnswerTextField.setMaxLength(130);
+        dialogAddThirdAnswerTextField.setMaxLength(130);
+        dialogAddFourthAnswerTextField.setMaxLength(130);
+        dialogAddCorrectAnswerTextField.setMaxLength(130);
     }
 
     public void showCharactersLimitForOneTextField(TextField textField, Label labelAbove) {

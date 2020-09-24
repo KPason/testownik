@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -26,7 +27,10 @@ import java.util.Random;
 
 
 public class MainController {
-    public Menu mainMenu;
+    @FXML
+    private Menu mainMenu;
+    @FXML
+    private Menu questionsMenu;
     @FXML
     private RadioButton firstQuestionButton;
     @FXML
@@ -74,6 +78,8 @@ public class MainController {
     public void initialize() {
         disableAndDismissingTheButtons("WELCOME TO THE GAME", true, true);
         menuRestartButton.setDisable(true);
+        mainMenu.setDisable(false);
+        questionsMenu.setDisable(false);
     }
 
     @FXML
@@ -248,6 +254,10 @@ public class MainController {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainWindowBorderPane.getScene().getWindow());
         dialog.setTitle("Editing questions");
+        DialogPane editingDialog = dialog.getDialogPane();
+        editingDialog.getStylesheets().add(getClass().getResource("/style/style1.css").toExternalForm());
+        editingDialog.getStyleClass().addAll("editingDialog");
+
         try {
             Parent root = FXMLLoader.load(getClass().getResource("editingQuestionsDialog.fxml"));
             dialog.getDialogPane().setContent(root);
@@ -302,10 +312,12 @@ public class MainController {
         Label fourth = new Label("ACCURACY RATIO: " + (new DecimalFormat("#.##").format(accuracyRatio)) + " %");
         Label fifth = new Label(setAccuracyResultText(accuracyRatio));
         VBox resultsBox = new VBox();
+        resultsBox.getStylesheets().add(getClass().getResource("/style/style1.css").toExternalForm());
+        resultsBox.getStyleClass().add("editingDialog");
         HBox buttonsBox = new HBox();
         Button restart = new Button("RESTART");
         Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
-        restart.setOnMouseClicked(e -> Main.getWindow().setScene(new Scene(mainSceneRoot,800,500)));
+        restart.setOnMouseClicked(e -> Main.getWindow().setScene(new Scene(mainSceneRoot)));
         Button exit = new Button("EXIT");
         exit.setOnMouseClicked(e -> Platform.exit());
 
@@ -324,6 +336,9 @@ public class MainController {
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.play();
+
+        mainMenu.setDisable(true);
+        questionsMenu.setDisable(true);
 
     }
 
@@ -392,6 +407,9 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText("After adding or deleting any questions during the game you have to choose" +
                 " if you want to continue playing with an old set of questions or restart the game with a new set!");
+        DialogPane alertDialog = alert.getDialogPane();
+        alertDialog.getStylesheets().add(getClass().getResource("/style/style1.css").toExternalForm());
+        alertDialog.getStyleClass().add("alertDialog");
         alert.showAndWait();
     }
 

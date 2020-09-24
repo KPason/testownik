@@ -10,10 +10,10 @@
 <?import javafx.scene.text.Font?>
 <DialogPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="sample.AddingQuestionsController"
-            prefWidth="500" prefHeight="500">
+            prefWidth="500" prefHeight="300" styleClass="editingDialog">
 
     <content>
-        <GridPane vgap="3" hgap="10" >
+        <GridPane vgap="3" hgap="10" styleClass="editingDialog">
             <columnConstraints>
                 <ColumnConstraints prefWidth="300"/>
                 <ColumnConstraints prefWidth="500"/>

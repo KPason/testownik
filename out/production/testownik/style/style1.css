@@ -4,6 +4,7 @@
         -fx-primary: #2A2E37;
         -fx-secondary: #FFFF8D;
         -fx-primaryText: #B2B2B2;
+        -fx-secondPrimary: #808080;
     }
 
     .root{
@@ -18,12 +19,14 @@
         -fx-text-fill: -fx-primaryText;
     }
 
+    /* NEXT BUTTONS */
     .next-buttons{
         -fx-border-color: -fx-secondary;
         -fx-border-radius: 20px;
         -fx-background-radius: 20px;
         -fx-background-color: -fx-primary;
         -fx-text-fill: -fx-primaryText;
+        -fx-cursor:hand;
     }
 
     .next-buttons:hover{
@@ -32,17 +35,125 @@
         -fx-text-fill: -fx-primary;
     }
 
+    /* RADIO BUTTONS*/
+
     .radio-buttons{
         -fx-text-fill: -fx-primaryText;
     }
 
+    .radio-buttons:hover {
+        -fx-text-fill: -fx-secondary;
+    }
+    .radio-buttons:hover .radio{
+        -fx-background-color: -fx-secondary;
+    }
+
     .radio-buttons .radio:hover {
         -fx-background-color: -fx-secondary;
-        -fx-border-radius: 130px; 
     }
 
     .radio-buttons:selected .radio{
-        -fx-border-color: #FF0000;
-        -fx-border-radius: 130px;
+        -fx-background-color: -fx-secondary;
     }
+
+   .radio-buttons:selected{
+        -fx-text-fill: -fx-secondary;
+   }
+
+   /* MAIN MENU */
+   .menu{
+        -fx-background-color: -fx-secondPrimary;
+   }
+   .menu-items{
+        -fx-background-color: #C0C0C0;
+   }
+
+
+    /* ALERT DIALOGS */
+
+    .alertDialog{
+        -fx-background-color: -fx-primary;
+        -fx-border-width: 2.0px;
+    }
+
+    .alertDialog > .button-bar > .container {
+      -fx-background-color:-fx-primary;
+    }
+
+    .alertDialog > .content.label {
+       -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+       -fx-background-color: -fx-primary;
+       -fx-text-fill: -fx-primaryText;
+       -fx-font-size:15.0px;
+    }
+
+    /**Costumization of DialogPane Header**/
+    .alertDialog:header .header-panel {
+      -fx-background-color: -fx-primary;
+    }
+
+    .alertDialog:header .header-panel .label{
+      -fx-background-color: -fx-primary;
+      -fx-border-radius:10px;
+      -fx-border-color: -fx-secondPrimary;
+      -fx-text-fill:-fx-primaryText;
+      -fx-font-size:15.0px;
+    }
+
+
+    /**Costumization of Buttons**/
+    .alertDialog .button{
+        -fx-border-color: -fx-secondary;
+        -fx-border-radius: 20px;
+        -fx-background-radius: 20px;
+        -fx-background-color: -fx-primary;
+        -fx-text-fill: -fx-primaryText;
+        -fx-wrap-text: true;
+        -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+        -fx-cursor:hand;
+     }
+
+    .alertDialog .button:hover{
+      -fx-border-color: -fx-secondary;
+      -fx-background-color: -fx-secondary;
+      -fx-text-fill: -fx-primary;
+    }
+
+    /* EDITING DIALOG */
+    .editingDialog{
+        -fx-background-color: -fx-primary;
+        -fx-border-width: 2.0px;
+    }
+
+    .editingDialog .label{
+         -fx-text-fill: -fx-primaryText;
+    }
+
+    editingDialog .center{
+         -fx-background-color: -fx-primary;
+    }
+
+    .editingDialog > .button-bar > .container {
+      -fx-background-color:-fx-primary;
+    }
+
+
+    /**Costumization of Buttons**/
+    .editingDialog .button{
+        -fx-border-color: -fx-secondary;
+        -fx-border-radius: 20px;
+        -fx-background-radius: 20px;
+        -fx-background-color: -fx-primary;
+        -fx-text-fill: -fx-primaryText;
+        -fx-wrap-text: true;
+        -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+        -fx-cursor:hand;
+     }
+
+    .editingDialog .button:hover{
+      -fx-border-color: -fx-secondary;
+      -fx-background-color: -fx-secondary;
+      -fx-text-fill: -fx-primary;
+    }
+
 

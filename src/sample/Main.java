@@ -22,7 +22,7 @@ public class Main extends Application {
 
         window = primaryStage;
         Parent mainSceneRoot = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
-        window.setScene(new Scene(mainSceneRoot, 600, 500));
+        window.setScene(new Scene(mainSceneRoot));
         window.setTitle("test game");
         window.show();
         window.setResizable(false);

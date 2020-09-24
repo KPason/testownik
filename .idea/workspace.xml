@@ -2,16 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/fontawesomefx_commons_8_15.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/style/style1.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/AddingQuestionsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/AddingQuestionsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/EditingQuestionsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/EditingQuestionsController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/addingQuestionDialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/addingQuestionDialog.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/editingQuestionsDialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/editingQuestionsDialog.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/mainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/mainController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/testownik/sample/mainScene.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/sample/mainScene.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/testownik/style/style1.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/testownik/style/style1.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questionsItems.txt" beforeDir="false" afterPath="$PROJECT_DIR$/questionsItems.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/AddingQuestionsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/AddingQuestionsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/EditingQuestionsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/EditingQuestionsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/addingQuestionDialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/addingQuestionDialog.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/editingQuestionsDialog.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/editingQuestionsDialog.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/mainScene.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/mainScene.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testownik.iml" beforeDir="false" afterPath="$PROJECT_DIR$/testownik.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/style/style1.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/style/style1.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,6 +252,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="275" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1599734196693" />
+    <state x="400" y="326" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1600967958239">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="400" y="326" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600967958239" />
     <state x="599" y="207" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog" timestamp="1600949096868">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -268,22 +280,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="739" y="261" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600950568893" />
-    <state width="1877" height="287" key="GridCell.Tab.0.bottom" timestamp="1600956533990">
+    <state width="1368" height="287" key="GridCell.Tab.0.bottom" timestamp="1600973635194">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="287" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600956533990" />
-    <state width="1877" height="287" key="GridCell.Tab.0.center" timestamp="1600956533990">
+    <state width="1368" height="287" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600973635194" />
+    <state width="1368" height="287" key="GridCell.Tab.0.center" timestamp="1600973635194">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="287" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600956533990" />
-    <state width="1877" height="287" key="GridCell.Tab.0.left" timestamp="1600956533990">
+    <state width="1368" height="287" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600973635194" />
+    <state width="1368" height="287" key="GridCell.Tab.0.left" timestamp="1600973635194">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="287" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600956533990" />
-    <state width="1877" height="287" key="GridCell.Tab.0.right" timestamp="1600956533990">
+    <state width="1368" height="287" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600973635194" />
+    <state width="1368" height="287" key="GridCell.Tab.0.right" timestamp="1600973635194">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="287" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600956533990" />
+    <state width="1368" height="287" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600973635194" />
     <state width="1413" height="286" key="GridCell.Tab.1.bottom" timestamp="1600081199363">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -324,10 +336,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="139" key="refactoring.ChangeSignatureDialog/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600097662976" />
-    <state x="392" y="242" key="run.anything.popup" timestamp="1600358633549">
+    <state x="392" y="242" key="run.anything.popup" timestamp="1600959631090">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="392" y="242" key="run.anything.popup/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600358633549" />
+    <state x="392" y="242" key="run.anything.popup/0.0.1920.1040/1920.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600959631090" />
     <state x="399" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1600950002227">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

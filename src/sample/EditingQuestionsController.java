@@ -98,6 +98,10 @@ public class EditingQuestionsController {
         dialog.setTitle("Add question");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("addingQuestionDialog.fxml"));
+        DialogPane addingDialog = dialog.getDialogPane();
+        addingDialog.getStylesheets().add(getClass().getResource("/style/style1.css").toExternalForm());
+        addingDialog.getStyleClass().add("editingDialog");
+
 
 
         try {
@@ -181,7 +185,11 @@ public class EditingQuestionsController {
     public void deleteItem(Question question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("delete question");
-        alert.setHeaderText("Deleting question \"" + question.getQuestion() + "\"");
+        if(question.getQuestion().length()>50){
+            alert.setHeaderText("Are you sure that you want to delete question: \n" + question.getQuestion().substring(0,question.getQuestion().length()/2) + "\n" + question.getQuestion().substring(question.getQuestion().length()/2));
+        }else{
+            alert.setHeaderText("Are you sure that you want to delete question: \n" + question.getQuestion());
+        }
         alert.setContentText("Are you sure? Press OK to confirm, or cancel to go back");
         Optional<ButtonType> result = alert.showAndWait();
 

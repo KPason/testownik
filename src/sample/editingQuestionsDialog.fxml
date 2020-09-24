@@ -3,10 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane fx:id="editingQuestionsDialogPane" prefWidth="540.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditingQuestionsController">
+<DialogPane fx:id="editingQuestionsDialogPane" prefWidth="540.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditingQuestionsController">
 
     <content>
-        <BorderPane>
+        <BorderPane styleClass="editingDialog" stylesheets="@../style/style1.css">
             <top>
                 <VBox alignment="CENTER" prefHeight="42.0" prefWidth="280.0">
                     <Button onAction="#showAddingNewQuestionDialog" text="ADD NEW QUESTION">
@@ -26,20 +26,20 @@
                     </VBox>
 
                     <VBox alignment="CENTER">
-                        <Label text="first answer"/>
+                        <Label text="first answer" />
                         <TextArea fx:id="firstAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                         <Label text="second answer">
                         </Label>
-                        <TextArea fx:id="secondAnswerTextArea" maxHeight="50" maxWidth="200" />
+                        <TextArea fx:id="secondAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                         <Label text="third answer">
                         </Label>
-                        <TextArea fx:id="thirdAnswerTextArea" maxHeight="50" maxWidth="200" />
+                        <TextArea fx:id="thirdAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                         <Label text="fourth answer">
                         </Label>
-                        <TextArea fx:id="fourthAnswerTextArea" maxHeight="50" maxWidth="200" />
+                        <TextArea fx:id="fourthAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                         <Label text="correct answer">
                         </Label>
-                        <TextArea fx:id="correctAnswerTextArea" maxHeight="50" maxWidth="200" />
+                        <TextArea fx:id="correctAnswerTextArea" maxHeight="50" maxWidth="200" wrapText="true" />
                     </VBox>
                 </HBox>
             </center>
